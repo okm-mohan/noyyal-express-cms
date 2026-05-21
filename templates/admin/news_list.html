@@ -266,8 +266,8 @@ body{
 .btn-edit,
 .btn-delete{
 
-    width:78px;
-    height:34px;
+    width:85px;
+    height:36px;
 
     border:none;
 
@@ -278,6 +278,12 @@ body{
     font-weight:600;
 
     color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
 
 }
 
@@ -296,6 +302,7 @@ body{
     background:#dc2626;
 
 }
+
 .btn-edit:hover,
 .btn-delete:hover{
 
@@ -447,39 +454,80 @@ body{
 
     <div class="card-box">
 
-        <!-- FILTER -->
+        <!-- FILTER SECTION -->
 
         <div class="row mb-4 align-items-center">
 
+            <!-- SEARCH -->
+
             <div class="col-md-4">
 
-                <input type="text"
-                       class="form-control search-box"
-                       placeholder="🔍 Search News">
+                <form method="get"
+                      action="/news-list">
+
+                    <!-- KEEP CATEGORY -->
+
+                    <input type="hidden"
+                           name="category_id"
+                           value="{{ selected_category_id if selected_category_id else '' }}">
+
+                    <input type="text"
+                           id="searchInput"
+                           name="search"
+                           class="form-control search-box"
+                           placeholder="🔍 Search News"
+                           value="{{ search if search else '' }}">
+
+                </form>
 
             </div>
+
+            <!-- CATEGORY FILTER -->
 
             <div class="col-md-3">
 
-                <select class="form-control search-box">
+                <form method="get"
+                      action="/news-list">
 
-                    <option>
-                        All Categories
-                    </option>
+                    <!-- KEEP SEARCH -->
 
-                    {% for category in categories %}
+                    <input type="hidden"
+                           name="search"
+                           value="{{ search if search else '' }}">
 
-                    <option>
+                    <select name="category_id"
+                            class="form-control search-box"
+                            onchange="this.form.submit()">
 
-                        {{ category.category_name }}
+                        <option value="">
+                            All Categories
+                        </option>
 
-                    </option>
+                        {% for category in categories %}
 
-                    {% endfor %}
+                        <option
 
-                </select>
+                            value="{{ category.id }}"
+
+                            {% if selected_category_id == category.id %}
+                                selected
+                            {% endif %}
+
+                        >
+
+                            {{ category.category_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </form>
 
             </div>
+
+            <!-- TOTAL -->
 
             <div class="col-md-5 text-end">
 
@@ -517,25 +565,19 @@ body{
 
                 </thead>
 
-                <tbody>
+                <tbody id="newsTableBody">
 
                     {% for news in news_list %}
 
                     <tr>
 
-                        <!-- ID -->
-
                         <td>
 
                             <strong>
-
                                 #{{ news.id }}
-
                             </strong>
 
                         </td>
-
-                        <!-- IMAGE -->
 
                         <td>
 
@@ -553,8 +595,6 @@ body{
 
                         </td>
 
-                        <!-- TITLE -->
-
                         <td>
 
                             <div class="news-title">
@@ -564,8 +604,6 @@ body{
                             </div>
 
                         </td>
-
-                        <!-- CATEGORY -->
 
                         <td>
 
@@ -577,8 +615,6 @@ body{
 
                         </td>
 
-                        <!-- VIEWS -->
-
                         <td>
 
                             <div class="view-box">
@@ -589,8 +625,6 @@ body{
                             </div>
 
                         </td>
-
-                        <!-- STATUS -->
 
                         <td>
 
@@ -614,8 +648,6 @@ body{
 
                         </td>
 
-                        <!-- DATE -->
-
                         <td>
 
                             <div class="date-box">
@@ -630,23 +662,29 @@ body{
 
                         <td>
 
-    <div style="display:flex; gap:6px;">
+                            <div class="d-flex gap-2 align-items-center">
 
-        <button class="btn btn-edit btn-sm">
+                                <!-- EDIT -->
 
-            ✏️ Edit
+                                <a href="/edit-news/{{ news.id }}"
+                                   class="btn btn-edit">
 
-        </button>
+                                    ✏️ Edit
 
-        <button class="btn btn-delete btn-sm">
+                                </a>
 
-            🗑 Delete
+                                <!-- DELETE -->
 
-        </button>
+                                <button class="btn btn-delete"
+                                        onclick="confirmDelete({{ news.id }})">
 
-    </div>
+                                    🗑 Delete
 
-</td>
+                                </button>
+
+                            </div>
+
+                        </td>
 
                     </tr>
 
@@ -671,7 +709,7 @@ body{
                     <li class="page-item {% if p == page %}active{% endif %}">
 
                         <a class="page-link"
-                           href="/news-list?page={{ p }}">
+                           href="/news-list?page={{ p }}&search={{ search }}&category_id={{ selected_category_id }}">
 
                             {{ p }}
 
@@ -690,6 +728,61 @@ body{
     </div>
 
 </div>
+
+<!-- SCRIPT -->
+
+<script>
+
+/* DELETE */
+
+function confirmDelete(newsId){
+
+    if(confirm("⚠️ Are you sure want to delete this news?")){
+
+        window.location.href = "/delete-news/" + newsId;
+
+    }
+
+}
+
+/* LIVE SEARCH FILTER */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const tableRows =
+        document.querySelectorAll("#newsTableBody tr");
+
+    searchInput.addEventListener("keyup", function(){
+
+        let keyword =
+            this.value.toLowerCase();
+
+        tableRows.forEach(function(row){
+
+            let rowText =
+                row.innerText.toLowerCase();
+
+            if(rowText.includes(keyword)){
+
+                row.style.display = "";
+
+            }
+            else{
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
 
 </body>
 
