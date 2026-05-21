@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Noyyal Express</title>
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- Swiper -->
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<!-- Google Fonts -->
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+
+}
+
+body{
+
+    background:#f1f5f9;
+    overflow-x:hidden;
+
+}
+
+/* TOP HEADER */
+
+.top-header{
+
+    background:#0f172a;
+    color:white;
+    padding:12px 0;
+
+}
+
+.logo{
+
+    font-size:34px;
+    font-weight:700;
+    color:white;
+
+}
+
+.logo span{
+
+    color:#ef4444;
+
+}
+
+.top-right{
+
+    font-size:14px;
+
+}
+
+/* NAVBAR */
+
+.navbar-custom{
+
+    background:white;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+
+    position:sticky;
+    top:0;
+    z-index:999;
+
+    padding:12px 0;
+
+}
+
+.nav-link{
+
+    color:#0f172a !important;
+    font-weight:600;
+    margin-right:10px;
+    transition:0.3s;
+
+}
+
+.nav-link:hover{
+
+    color:#dc2626 !important;
+
+}
+
+.dropdown-menu{
+
+    border:none;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
+
+}
+
+/* BREAKING BAR */
+
+.breaking-bar{
+
+    background:#dc2626;
+    color:white;
+    height:50px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+
+}
+
+.breaking-title{
+
+    background:#111827;
+    padding:15px 25px;
+    font-weight:700;
+    white-space:nowrap;
+
+}
+
+.ticker-wrapper{
+
+    width:100%;
+    overflow:hidden;
+
+}
+
+.ticker{
+
+    white-space:nowrap;
+    display:inline-block;
+    padding-left:100%;
+    animation:ticker 30s linear infinite;
+
+}
+
+@keyframes ticker{
+
+    0%{
+        transform:translateX(0);
+    }
+
+    100%{
+        transform:translateX(-100%);
+    }
+
+}
+
+/* HERO SECTION */
+
+.hero-section{
+
+    margin-top:25px;
+
+}
+
+.hero-news{
+
+    position:relative;
+    overflow:hidden;
+    border-radius:24px;
+    height:540px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+}
+
+.hero-news img{
+
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.5s;
+
+}
+
+.hero-news:hover img{
+
+    transform:scale(1.08);
+
+}
+
+.hero-overlay{
+
+    position:absolute;
+    inset:0;
+
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,0.95),
+        rgba(0,0,0,0.2)
+    );
+
+}
+
+.hero-content{
+
+    position:absolute;
+    bottom:40px;
+    left:40px;
+    color:white;
+    z-index:2;
+
+}
+
+.hero-category{
+
+    background:#dc2626;
+    display:inline-block;
+    padding:7px 18px;
+    border-radius:30px;
+    margin-bottom:15px;
+    font-size:13px;
+    font-weight:600;
+
+}
+
+.hero-title{
+
+    font-size:42px;
+    font-weight:700;
+    line-height:1.4;
+    max-width:700px;
+
+}
+
+/* SIDE NEWS */
+
+.side-news{
+
+    display:flex;
+    gap:14px;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:20px;
+    box-shadow:0 5px 18px rgba(0,0,0,0.08);
+    transition:0.3s;
+
+}
+
+.side-news:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.side-news img{
+
+    width:150px;
+    height:120px;
+    object-fit:cover;
+
+}
+
+.side-news-content{
+
+    padding:14px;
+
+}
+
+.side-news-category{
+
+    color:#dc2626;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:8px;
+
+}
+
+.side-news-title{
+
+    font-size:16px;
+    font-weight:600;
+    line-height:1.5;
+    color:#111827;
+
+}
+
+/* SECTION TITLE */
+
+.section-title{
+
+    font-size:32px;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:30px;
+    position:relative;
+    display:inline-block;
+
+}
+
+.section-title::after{
+
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-10px;
+    width:60%;
+    height:4px;
+    background:#dc2626;
+    border-radius:10px;
+
+}
+
+/* SLIDER */
+
+.slider-section{
+
+    margin-top:70px;
+
+}
+
+.swiper{
+
+    border-radius:24px;
+    overflow:hidden;
+
+}
+
+.swiper-slide{
+
+    position:relative;
+    height:520px;
+
+}
+
+.swiper-slide img{
+
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+}
+
+.slide-overlay{
+
+    position:absolute;
+    inset:0;
+
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,0.95),
+        rgba(0,0,0,0.1)
+    );
+
+}
+
+.slide-content{
+
+    position:absolute;
+    bottom:40px;
+    left:40px;
+    color:white;
+    z-index:2;
+
+}
+
+.slide-category{
+
+    background:#dc2626;
+    display:inline-block;
+    padding:7px 18px;
+    border-radius:30px;
+    margin-bottom:15px;
+    font-size:13px;
+    font-weight:600;
+
+}
+
+.slide-content h2{
+
+    font-size:42px;
+    font-weight:700;
+    max-width:700px;
+
+}
+
+/* NEWS CARD */
+
+.news-card{
+
+    background:white;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    transition:0.3s;
+    height:100%;
+
+}
+
+.news-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.news-card img{
+
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    transition:0.5s;
+
+}
+
+.news-card:hover img{
+
+    transform:scale(1.08);
+
+}
+
+.news-content{
+
+    padding:22px;
+
+}
+
+.category{
+
+    color:#dc2626;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:12px;
+
+}
+
+.news-title{
+
+    font-size:20px;
+    font-weight:700;
+    line-height:1.5;
+    color:#111827;
+
+}
+
+/* TRENDING */
+
+.trending-box{
+
+    background:white;
+    padding:25px;
+    border-radius:22px;
+    box-shadow:0 5px 18px rgba(0,0,0,0.08);
+
+}
+
+.trending-item{
+
+    border-bottom:1px solid #e5e7eb;
+    padding:16px 0;
+
+}
+
+.trending-item:last-child{
+
+    border:none;
+
+}
+
+.trending-item a{
+
+    color:#111827;
+    font-weight:600;
+    text-decoration:none;
+    line-height:1.6;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+    background:#0f172a;
+    color:white;
+    margin-top:80px;
+    padding:70px 0 30px;
+
+}
+
+.footer-title{
+
+    font-size:24px;
+    font-weight:700;
+    margin-bottom:20px;
+
+}
+
+.footer-links a{
+
+    display:block;
+    color:#cbd5e1;
+    margin-bottom:10px;
+    text-decoration:none;
+    transition:0.3s;
+
+}
+
+.footer-links a:hover{
+
+    color:white;
+    padding-left:5px;
+
+}
+
+.social-icons i{
+
+    width:42px;
+    height:42px;
+    background:#1e293b;
+    text-align:center;
+    line-height:42px;
+    border-radius:50%;
+    margin-right:10px;
+    transition:0.3s;
+
+}
+
+.social-icons i:hover{
+
+    background:#dc2626;
+
+}
+
+.footer-bottom{
+
+    border-top:1px solid rgba(255,255,255,0.1);
+    margin-top:40px;
+    padding-top:20px;
+    text-align:center;
+    color:#94a3b8;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hero-news{
+
+        height:350px;
+
+    }
+
+    .hero-title{
+
+        font-size:24px;
+
+    }
+
+    .swiper-slide{
+
+        height:300px;
+
+    }
+
+    .slide-content h2{
+
+        font-size:24px;
+
+    }
+
+    .logo{
+
+        font-size:24px;
+
+    }
+
+    .side-news{
+
+        flex-direction:column;
+
+    }
+
+    .side-news img{
+
+        width:100%;
+        height:220px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOP HEADER -->
+
+<div class="top-header">
+
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <div class="logo">
+
+            NOYYAL <span>EXPRESS</span>
+
+        </div>
+
+        <div class="top-right">
+
+            <i class="fa fa-calendar"></i>
+
+            Ultra Premium News Portal
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-custom">
+
+    <div class="container">
+
+        <button class="navbar-toggler"
+                data-bs-toggle="collapse"
+                data-bs-target="#menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse"
+             id="menu">
+
+            <ul class="navbar-nav mx-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+                <!-- MENU CATEGORIES -->
+
+                {% for category in menu_categories %}
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/category/{{ category.id }}">
+
+                        {{ category.category_name }}
+
+                    </a>
+
+                </li>
+
+                {% endfor %}
+
+                <!-- MORE MENU -->
+
+                <li class="nav-item dropdown">
+
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       data-bs-toggle="dropdown">
+
+                        More
+
+                    </a>
+
+                    <ul class="dropdown-menu">
+
+                        {% for category in more_categories %}
+
+                        <li>
+
+                            <a class="dropdown-item"
+                               href="/category/{{ category.id }}">
+
+                                {{ category.category_name }}
+
+                            </a>
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- BREAKING NEWS -->
+
+<div class="breaking-bar">
+
+    <div class="breaking-title">
+
+        🚨 BREAKING
+
+    </div>
+
+    <div class="ticker-wrapper">
+
+        <div class="ticker">
+
+            {% for news in breaking_news %}
+
+                {{ news.title }} 🔴
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- HERO SECTION -->
+
+<div class="container hero-section">
+
+    <div class="row">
+
+        <!-- MAIN HERO -->
+
+        <div class="col-lg-8">
+
+            {% if featured_news %}
+
+            <a href="/news/{{ featured_news[0].slug }}"
+               style="text-decoration:none;">
+
+                <div class="hero-news">
+
+                    {% if featured_news[0].image_name %}
+
+                    <img src="/static/uploads/{{ featured_news[0].image_name }}">
+
+                    {% else %}
+
+                    <img src="https://via.placeholder.com/900x520">
+
+                    {% endif %}
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+
+                        <div class="hero-category">
+
+                            {{ featured_news[0].category_name }}
+
+                        </div>
+
+                        <div class="hero-title">
+
+                            {{ featured_news[0].title }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        <!-- SIDE HERO -->
+
+        <div class="col-lg-4">
+
+            {% for news in featured_news[1:5] %}
+
+            <a href="/news/{{ news.slug }}"
+               style="text-decoration:none;">
+
+                <div class="side-news">
+
+                    {% if news.image_name %}
+
+                    <img src="/static/uploads/{{ news.image_name }}">
+
+                    {% else %}
+
+                    <img src="https://via.placeholder.com/150x120">
+
+                    {% endif %}
+
+                    <div class="side-news-content">
+
+                        <div class="side-news-category">
+
+                            {{ news.category_name }}
+
+                        </div>
+
+                        <div class="side-news-title">
+
+                            {{ news.title }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SLIDER SECTION -->
+
+<div class="container slider-section">
+
+    <div class="section-title">
+
+        {{ slider_category.category_name }}
+
+    </div>
+
+    <div class="swiper mySwiper">
+
+        <div class="swiper-wrapper">
+
+            {% for news in slider_news %}
+
+            <div class="swiper-slide">
+
+                {% if news.image_name %}
+
+                <img src="/static/uploads/{{ news.image_name }}">
+
+                {% else %}
+
+                <img src="https://via.placeholder.com/1200x520">
+
+                {% endif %}
+
+                <div class="slide-overlay"></div>
+
+                <div class="slide-content">
+
+                    <div class="slide-category">
+
+                        {{ news.category_name }}
+
+                    </div>
+
+                    <h2>
+
+                        {{ news.title }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- LATEST NEWS -->
+
+<div class="container mt-5">
+
+    <div class="row">
+
+        <!-- NEWS -->
+
+        <div class="col-lg-8">
+
+            <div class="section-title">
+
+                Latest News
+
+            </div>
+
+            <div class="row">
+
+                {% for news in latest_news %}
+
+                <div class="col-md-6 mb-4">
+
+                    <a href="/news/{{ news.slug }}"
+                       style="text-decoration:none;">
+
+                        <div class="news-card">
+
+                            {% if news.image_name %}
+
+                            <img src="/static/uploads/{{ news.image_name }}">
+
+                            {% else %}
+
+                            <img src="https://via.placeholder.com/400x240">
+
+                            {% endif %}
+
+                            <div class="news-content">
+
+                                <div class="category">
+
+                                    {{ news.category_name }}
+
+                                </div>
+
+                                <div class="news-title">
+
+                                    {{ news.title }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- TRENDING -->
+
+        <div class="col-lg-4">
+
+            <div class="trending-box">
+
+                <div class="section-title">
+
+                    Trending
+
+                </div>
+
+                {% for news in breaking_news[:8] %}
+
+                <div class="trending-item">
+
+                    <a href="/news/{{ news.slug }}">
+
+                        {{ news.title }}
+
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- HOMEPAGE CATEGORY NEWS -->
+
+{% for category in homepage_categories %}
+
+<div class="container mt-5">
+
+    <div class="section-title">
+
+        {{ category.category_name }}
+
+    </div>
+
+    <div class="row">
+
+        {% for news in category_news[category.id] %}
+
+        <div class="col-md-4 mb-4">
+
+            <a href="/news/{{ news.slug }}"
+               style="text-decoration:none;">
+
+                <div class="news-card">
+
+                    {% if news.image_name %}
+
+                    <img src="/static/uploads/{{ news.image_name }}">
+
+                    {% else %}
+
+                    <img src="https://via.placeholder.com/400x240">
+
+                    {% endif %}
+
+                    <div class="news-content">
+
+                        <div class="category">
+
+                            {{ news.category_name }}
+
+                        </div>
+
+                        <div class="news-title">
+
+                            {{ news.title }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-4">
+
+                <div class="footer-title">
+
+                    NOYYAL EXPRESS
+
+                </div>
+
+                <p>
+
+                    Ultra modern AI-powered digital news portal built with FastAPI + MySQL.
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="footer-title">
+
+                    Categories
+
+                </div>
+
+                <div class="footer-links">
+
+                    {% for category in menu_categories[:6] %}
+
+                    <a href="/category/{{ category.id }}">
+
+                        {{ category.category_name }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="footer-title">
+
+                    Follow Us
+
+                </div>
+
+                <div class="social-icons mt-4">
+
+                    <i class="fab fa-facebook-f"></i>
+
+                    <i class="fab fa-instagram"></i>
+
+                    <i class="fab fa-youtube"></i>
+
+                    <i class="fab fa-x-twitter"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            © 2026 NOYYAL EXPRESS — All Rights Reserved.
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCRIPTS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+
+var swiper = new Swiper(".mySwiper", {
+
+    loop:true,
+
+    autoplay:{
+
+        delay:3000,
+        disableOnInteraction:false,
+
+    },
+
+    pagination:{
+
+        el:".swiper-pagination",
+        clickable:true,
+
+    },
+
+});
+
+</script>
+
+</body>
+
+</html>
