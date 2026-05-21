@@ -36,16 +36,161 @@ if not os.path.exists("static/uploads"):
 
     os.makedirs("static/uploads")
 
-# HOME PAGE
+# ============================================
+# FRONTEND WEBSITE
+# ============================================
 
-@app.get("/")
-def home():
+# FRONTEND HOME PAGE
 
-    return {
+@app.get("/", response_class=HTMLResponse)
+def frontend_home(request: Request):
 
-        "message": "Noyyal Express Backend Running"
+    # MYSQL CONNECTION
 
-    }
+    connection = pymysql.connect(
+
+        host="localhost",
+        user="root",
+        password="",
+        database="noyyalexpress"
+
+    )
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # ============================================
+    # GET CATEGORIES
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+
+        ORDER BY category_name ASC
+
+        """
+
+    )
+
+    categories = cursor.fetchall()
+
+    # ============================================
+    # HERO NEWS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 5
+
+        """
+
+    )
+
+    hero_news = cursor.fetchall()
+
+    # ============================================
+    # BREAKING NEWS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM news
+
+        WHERE is_breaking=1
+
+        ORDER BY id DESC
+
+        LIMIT 10
+
+        """
+
+    )
+
+    breaking_news = cursor.fetchall()
+
+    # ============================================
+    # LATEST NEWS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 12
+
+        """
+
+    )
+
+    latest_news = cursor.fetchall()
+
+    connection.close()
+
+    # ============================================
+    # RETURN TEMPLATE
+    # ============================================
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="frontend/index.html",
+
+        context={
+
+            "categories": categories,
+
+            "hero_news": hero_news,
+
+            "breaking_news": breaking_news,
+
+            "latest_news": latest_news
+
+        }
+
+    )
 
 # ADMIN LOGIN PAGE
 
