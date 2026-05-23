@@ -123,7 +123,7 @@
 </div>
 
 <!-- ========================================= -->
-<!-- HEADER AREA -->
+<!-- HEADER -->
 <!-- ========================================= -->
 
 <div class="bg-white shadow">
@@ -136,11 +136,15 @@
 
             <div class="flex items-center">
 
-                <img
-                    src="/static/logo/logo.png"
-                    alt="Noyyal Express"
-                    class="h-20 object-contain"
-                >
+                <a href="/">
+
+                    <img
+                        src="/static/logo/logo.png"
+                        alt="Noyyal Express"
+                        class="h-20 object-contain"
+                    >
+
+                </a>
 
             </div>
 
@@ -236,7 +240,7 @@
             {% for category in categories[:8] %}
 
             <a
-                href="#"
+                href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
                 class="hover:text-yellow-300 whitespace-nowrap"
             >
 
@@ -246,7 +250,7 @@
 
             {% endfor %}
 
-            <!-- MORE DROPDOWN -->
+            <!-- MORE MENU -->
 
             {% if categories|length > 8 %}
 
@@ -271,7 +275,7 @@
                     {% for category in categories[8:] %}
 
                     <a
-                        href="#"
+                        href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
                         class="block px-5 py-3 hover:bg-red-600 hover:text-white border-b"
                     >
 
@@ -347,10 +351,13 @@
 
                     {% for news in hero_news %}
 
-                    <div class="swiper-slide relative">
+                    <a
+                        href="/news/{{ news.id }}/{{ news.slug }}"
+                        class="swiper-slide relative block"
+                    >
 
                         <img
-                            src="/static/uploads/{{ news.image_name }}"
+                            src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
                             class="w-full h-[520px] object-cover"
                         >
 
@@ -378,7 +385,7 @@
 
                         </div>
 
-                    </div>
+                    </a>
 
                     {% endfor %}
 
@@ -414,10 +421,13 @@
 
                 {% for news in latest_news[:3] %}
 
-                <div class="flex gap-4 mb-5 border-b pb-4">
+                <a
+                    href="/news/{{ news.id }}/{{ news.slug }}"
+                    class="flex gap-4 mb-5 border-b pb-4 block"
+                >
 
                     <img
-                        src="/static/uploads/{{ news.image_name }}"
+                        src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
                         class="w-28 h-24 object-cover rounded-lg"
                     >
 
@@ -437,7 +447,7 @@
 
                     </div>
 
-                </div>
+                </a>
 
                 {% endfor %}
 
@@ -463,24 +473,21 @@
 
         </h2>
 
-        <a href="#" class="text-red-600 font-bold">
-
-            View All →
-
-        </a>
-
     </div>
 
     <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
 
         {% for news in latest_news %}
 
-        <div class="bg-white rounded-2xl overflow-hidden shadow-lg news-card">
+        <a
+            href="/news/{{ news.id }}/{{ news.slug }}"
+            class="bg-white rounded-2xl overflow-hidden shadow-lg news-card block"
+        >
 
             <div class="overflow-hidden">
 
                 <img
-                    src="/static/uploads/{{ news.image_name }}"
+                    src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
                     class="w-full h-56 object-cover"
                 >
 
@@ -516,7 +523,7 @@
 
             </div>
 
-        </div>
+        </a>
 
         {% endfor %}
 
@@ -534,16 +541,14 @@
 
         <div>
 
-            <h2 class="text-3xl font-bold text-red-600">
-
-                NOYYAL EXPRESS
-
-            </h2>
+            <img
+                src="/static/logo/logo.png"
+                class="h-16"
+            >
 
             <p class="mt-4 text-gray-400">
 
-                Premium Tamil Digital News Platform with Breaking News,
-                Politics, Sports, Cinema and Technology.
+                Premium Tamil Digital News Platform.
 
             </p>
 
@@ -561,7 +566,14 @@
 
                 {% for category in categories[:8] %}
 
-                <p>{{ category.category_name }}</p>
+                <a
+                    href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                    class="block hover:text-red-500"
+                >
+
+                    {{ category.category_name }}
+
+                </a>
 
                 {% endfor %}
 

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ news.title }} | Noyyal Express</title>
+
+    <!-- Tailwind CSS -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+
+        body{
+
+            background:#f5f5f5;
+            font-family:Arial, Helvetica, sans-serif;
+
+        }
+
+        .article-content p{
+
+            margin-bottom:20px;
+            line-height:1.9;
+            font-size:18px;
+            color:#333;
+
+        }
+
+        .news-card img{
+
+            transition:0.4s;
+
+        }
+
+        .news-card:hover img{
+
+            transform:scale(1.08);
+
+        }
+
+        .category-title{
+
+            border-left:5px solid red;
+            padding-left:10px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ========================================= -->
+<!-- TOP HEADER -->
+<!-- ========================================= -->
+
+<div class="bg-black text-white py-2 px-4">
+
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <div class="flex items-center gap-3">
+
+            <span class="bg-red-600 px-3 py-1 rounded text-sm">
+
+                LIVE
+
+            </span>
+
+            <span id="date-time"></span>
+
+        </div>
+
+        <div class="flex gap-4 text-lg">
+
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-youtube"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-twitter"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- HEADER -->
+<!-- ========================================= -->
+
+<div class="bg-white shadow">
+
+    <div class="max-w-7xl mx-auto px-4 py-4">
+
+        <div class="grid lg:grid-cols-3 items-center gap-5">
+
+            <!-- LOGO -->
+
+            <div class="flex items-center">
+
+                <a href="/">
+
+                    <img
+                        src="/static/logo/logo.png"
+                        alt="Noyyal Express"
+                        class="h-20 object-contain"
+                    >
+
+                </a>
+
+            </div>
+
+            <!-- CENTER AD -->
+
+            <div>
+
+                <div
+                    class="bg-gradient-to-r from-red-600 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                >
+
+                    <div class="text-center">
+
+                        <p class="text-sm uppercase tracking-widest">
+
+                            Sponsored Advertisement
+
+                        </p>
+
+                        <h2 class="text-2xl font-bold">
+
+                            Your Business Ad Here
+
+                        </h2>
+
+                        <p class="text-sm text-gray-200">
+
+                            Contact: +91 XXXXX XXXXX
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="flex justify-end">
+
+                <form
+                    action="/"
+                    method="GET"
+                    class="relative w-full lg:w-72"
+                >
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search News..."
+                        class="border-2 border-red-600 px-4 py-3 rounded-xl w-full focus:outline-none"
+                    >
+
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-2 bg-red-600 text-white px-4 py-1 rounded-lg"
+                    >
+
+                        <i class="fa fa-search"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
+
+<div class="bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+
+    <div class="max-w-7xl mx-auto relative">
+
+        <div class="flex items-center gap-6 px-4 py-4 font-semibold overflow-visible">
+
+            <a href="/" class="hover:text-yellow-300 whitespace-nowrap">
+
+                HOME
+
+            </a>
+
+            {% for category in categories[:8] %}
+
+            <a
+                href="#"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                {{ category.category_name }}
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- ARTICLE HEADER -->
+<!-- ========================================= -->
+
+<div class="max-w-7xl mx-auto px-4 mt-8">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+
+        <!-- CATEGORY -->
+
+        <span class="bg-red-600 text-white px-4 py-1 rounded text-sm">
+
+            {{ news.category_name }}
+
+        </span>
+
+        <!-- TITLE -->
+
+        <h1 class="text-5xl font-bold leading-tight mt-5">
+
+            {{ news.title }}
+
+        </h1>
+
+        <!-- META -->
+
+        <div class="flex flex-wrap gap-5 mt-6 text-gray-500">
+
+            <div>
+
+                <i class="fa fa-user"></i>
+                Admin
+
+            </div>
+
+            <div>
+
+                <i class="fa fa-calendar"></i>
+                Today
+
+            </div>
+
+            <div>
+
+                <i class="fa fa-eye"></i>
+                1.2K Views
+
+            </div>
+
+        </div>
+
+        <!-- FEATURE IMAGE -->
+
+        <div class="mt-8 rounded-2xl overflow-hidden">
+
+            <img
+                src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                class="w-full h-[500px] object-cover"
+            >
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================= -->
+
+<div class="max-w-7xl mx-auto px-4 mt-8">
+
+    <div class="grid lg:grid-cols-3 gap-8">
+
+        <!-- ARTICLE CONTENT -->
+
+        <div class="lg:col-span-2">
+
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+
+                <!-- SOCIAL SHARE -->
+
+                <div class="flex gap-4 mb-8">
+
+                    <a
+                        href="https://wa.me/?text={{ news.title }}"
+                        target="_blank"
+                        class="bg-green-500 text-white px-5 py-3 rounded-lg"
+                    >
+
+                        <i class="fab fa-whatsapp"></i>
+
+                    </a>
+
+                    <a
+                        href="#"
+                        class="bg-blue-600 text-white px-5 py-3 rounded-lg"
+                    >
+
+                        <i class="fab fa-facebook"></i>
+
+                    </a>
+
+                    <a
+                        href="#"
+                        class="bg-sky-500 text-white px-5 py-3 rounded-lg"
+                    >
+
+                        <i class="fab fa-twitter"></i>
+
+                    </a>
+
+                    <a
+                        href="#"
+                        class="bg-blue-500 text-white px-5 py-3 rounded-lg"
+                    >
+
+                        <i class="fab fa-telegram"></i>
+
+                    </a>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+
+                <div class="article-content">
+
+                    {{ news.description|safe }}
+
+                </div>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- RELATED NEWS -->
+            <!-- ========================================= -->
+
+            <div class="mt-12">
+
+                <h2 class="text-3xl font-bold category-title mb-6">
+
+                    Related News
+
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+
+                    {% for item in related_news %}
+
+                    <a
+                        href="/news/{{ item.id }}/{{ item.slug }}"
+                        class="bg-white rounded-2xl shadow-lg overflow-hidden news-card block"
+                    >
+
+                        <div class="overflow-hidden">
+
+                            <img
+                                src="{% if item.image_name %}/static/uploads/{{ item.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                                class="w-full h-56 object-cover"
+                            >
+
+                        </div>
+
+                        <div class="p-5">
+
+                            <h3 class="text-xl font-bold line-clamp-2">
+
+                                {{ item.title }}
+
+                            </h3>
+
+                            <p class="text-gray-600 mt-3 text-sm">
+
+                                {{ item.description[:100] }}...
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- SIDEBAR -->
+        <!-- ========================================= -->
+
+        <div>
+
+            <!-- TRENDING NEWS -->
+
+            <div class="bg-white rounded-2xl shadow-xl p-5">
+
+                <div class="flex justify-between items-center mb-5">
+
+                    <h2 class="text-2xl font-bold text-red-600">
+
+                        Trending News
+
+                    </h2>
+
+                </div>
+
+                {% for item in trending_news %}
+
+                <a
+                    href="/news/{{ item.id }}/{{ item.slug }}"
+                    class="flex gap-4 mb-5 border-b pb-4"
+                >
+
+                    <img
+                        src="{% if item.image_name %}/static/uploads/{{ item.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                        class="w-28 h-24 object-cover rounded-lg"
+                    >
+
+                    <div>
+
+                        <h3 class="font-bold text-sm leading-6 hover:text-red-600">
+
+                            {{ item.title }}
+
+                        </h3>
+
+                        <p class="text-gray-500 text-xs mt-2">
+
+                            {{ item.description[:60] }}...
+
+                        </p>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- ADVERTISEMENT -->
+
+            <div
+                class="bg-gradient-to-r from-black to-red-700 rounded-2xl p-8 text-white mt-8 shadow-xl"
+            >
+
+                <h2 class="text-3xl font-bold">
+
+                    Advertise Here
+
+                </h2>
+
+                <p class="mt-4 text-gray-200">
+
+                    Promote your business with Noyyal Express Digital Platform.
+
+                </p>
+
+                <button
+                    class="mt-6 bg-white text-black px-5 py-3 rounded-lg font-bold"
+                >
+
+                    Contact Us
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- FOOTER -->
+<!-- ========================================= -->
+
+<footer class="bg-black text-white mt-16">
+
+    <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
+
+        <div>
+
+            <img
+                src="/static/logo/logo.png"
+                class="h-16"
+            >
+
+            <p class="mt-4 text-gray-400">
+
+                Premium Tamil Digital News Platform.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Categories
+
+            </h3>
+
+            {% for category in categories[:8] %}
+
+            <p class="mb-2">
+
+                {{ category.category_name }}
+
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Quick Links
+
+            </h3>
+
+            <p class="mb-2">Home</p>
+            <p class="mb-2">Breaking News</p>
+            <p class="mb-2">Politics</p>
+            <p class="mb-2">Technology</p>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Follow Us
+
+            </h3>
+
+            <div class="flex gap-4 text-2xl">
+
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="border-t border-gray-700 py-5 text-center text-gray-400">
+
+        © 2026 Noyyal Express. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+<!-- ========================================= -->
+<!-- SCRIPT -->
+<!-- ========================================= -->
+
+<script>
+
+    function updateDateTime(){
+
+        const now = new Date();
+
+        document.getElementById("date-time").innerHTML =
+            now.toLocaleString();
+
+    }
+
+    setInterval(updateDateTime,1000);
+
+    updateDateTime();
+
+</script>
+
+</body>
+
+</html>

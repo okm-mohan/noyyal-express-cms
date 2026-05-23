@@ -62,7 +62,7 @@ def get_connection():
     return connection
 
 # ============================================
-# FRONTEND HOME PAGE WITH SEARCH
+# FRONTEND HOME PAGE
 # ============================================
 
 @app.get("/", response_class=HTMLResponse)
@@ -78,9 +78,7 @@ def frontend_home(
 
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # ============================================
     # GET CATEGORIES
-    # ============================================
 
     cursor.execute(
 
@@ -100,9 +98,7 @@ def frontend_home(
 
     categories = cursor.fetchall()
 
-    # ============================================
     # HERO NEWS
-    # ============================================
 
     cursor.execute(
 
@@ -131,9 +127,7 @@ def frontend_home(
 
     hero_news = cursor.fetchall()
 
-    # ============================================
     # BREAKING NEWS
-    # ============================================
 
     cursor.execute(
 
@@ -155,9 +149,7 @@ def frontend_home(
 
     breaking_news = cursor.fetchall()
 
-    # ============================================
     # SEARCH CONDITION
-    # ============================================
 
     where_clause = ""
 
@@ -187,9 +179,7 @@ def frontend_home(
 
         ]
 
-    # ============================================
     # LATEST NEWS
-    # ============================================
 
     query = f"""
 
@@ -238,6 +228,323 @@ def frontend_home(
             "breaking_news": breaking_news,
             "latest_news": latest_news,
             "search": search
+
+        }
+
+    )
+
+# ============================================
+# NEWS DETAIL PAGE
+# ============================================
+
+@app.get("/news/{news_id}/{slug}", response_class=HTMLResponse)
+def news_detail(
+
+    request: Request,
+
+    news_id: int,
+
+    slug: str
+
+):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # GET CATEGORIES
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+
+        ORDER BY category_name ASC
+
+        """
+
+    )
+
+    categories = cursor.fetchall()
+
+    # GET SINGLE NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            category.category_name,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN category
+
+        ON news.category_id = category.id
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        WHERE news.id=%s
+
+        GROUP BY news.id
+
+        LIMIT 1
+
+        """,
+
+        (news_id,)
+
+    )
+
+    news = cursor.fetchone()
+
+    # NEWS NOT FOUND
+
+    if not news:
+
+        return HTMLResponse(
+
+            content="<h1>News Not Found</h1>",
+
+            status_code=404
+
+        )
+
+    # RELATED NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        WHERE news.category_id=%s
+
+        AND news.id!=%s
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 6
+
+        """,
+
+        (
+
+            news['category_id'],
+            news_id
+
+        )
+
+    )
+
+    related_news = cursor.fetchall()
+
+    # TRENDING NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 5
+
+        """
+
+    )
+
+    trending_news = cursor.fetchall()
+
+    connection.close()
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="frontend/news_detail.html",
+
+        context={
+
+            "categories": categories,
+            "news": news,
+            "related_news": related_news,
+            "trending_news": trending_news
+
+        }
+
+    )
+
+# ============================================
+# CATEGORY NEWS PAGE
+# ============================================
+
+@app.get("/category/{category_id}/{slug}", response_class=HTMLResponse)
+def category_news(
+
+    request: Request,
+
+    category_id: int,
+
+    slug: str
+
+):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # GET ALL CATEGORIES
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+
+        ORDER BY category_name ASC
+
+        """
+
+    )
+
+    categories = cursor.fetchall()
+
+    # CURRENT CATEGORY
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE id=%s
+
+        LIMIT 1
+
+        """,
+
+        (category_id,)
+
+    )
+
+    current_category = cursor.fetchone()
+
+    # CATEGORY NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        WHERE news.category_id=%s
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 50
+
+        """,
+
+        (category_id,)
+
+    )
+
+    category_news = cursor.fetchall()
+
+    # TRENDING NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            news.*,
+            news_images.image_name
+
+        FROM news
+
+        LEFT JOIN news_images
+
+        ON news.id = news_images.news_id
+
+        GROUP BY news.id
+
+        ORDER BY news.id DESC
+
+        LIMIT 5
+
+        """
+
+    )
+
+    trending_news = cursor.fetchall()
+
+    connection.close()
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="frontend/category_news.html",
+
+        context={
+
+            "categories": categories,
+            "current_category": current_category,
+            "category_news": category_news,
+            "trending_news": trending_news
 
         }
 
@@ -455,9 +762,7 @@ async def save_news(
 
     news_id = cursor.lastrowid
 
-    # ============================================
     # SAVE IMAGES
-    # ============================================
 
     for image in images:
 
@@ -496,230 +801,6 @@ async def save_news(
                 )
 
             )
-
-    connection.commit()
-
-    connection.close()
-
-    return RedirectResponse(
-
-        url="/news-list",
-
-        status_code=303
-
-    )
-
-# ============================================
-# NEWS LIST
-# ============================================
-
-@app.get("/news-list", response_class=HTMLResponse)
-def news_list(
-
-    request: Request,
-
-    page: int = 1,
-
-    search: str = "",
-
-    category_id: str = ""
-
-):
-
-    limit = 10
-
-    offset = (page - 1) * limit
-
-    connection = get_connection()
-
-    cursor = connection.cursor(pymysql.cursors.DictCursor)
-
-    conditions = []
-
-    values = []
-
-    # SEARCH FILTER
-
-    if search != "":
-
-        conditions.append("""
-
-            (
-
-                news.title LIKE %s
-
-                OR news.description LIKE %s
-
-                OR category.category_name LIKE %s
-
-            )
-
-        """)
-
-        keyword = "%" + search + "%"
-
-        values.extend([
-
-            keyword,
-            keyword,
-            keyword
-
-        ])
-
-    # CATEGORY FILTER
-
-    if category_id != "":
-
-        conditions.append(
-
-            "news.category_id = %s"
-
-        )
-
-        values.append(category_id)
-
-    # WHERE CLAUSE
-
-    where_clause = ""
-
-    if conditions:
-
-        where_clause = "WHERE " + " AND ".join(conditions)
-
-    # COUNT
-
-    count_query = f"""
-
-    SELECT COUNT(DISTINCT news.id) as total
-
-    FROM news
-
-    LEFT JOIN category
-
-    ON news.category_id = category.id
-
-    {where_clause}
-
-    """
-
-    cursor.execute(count_query, values)
-
-    total_news = cursor.fetchone()['total']
-
-    total_pages = (total_news + limit - 1) // limit
-
-    # NEWS QUERY
-
-    query = f"""
-
-    SELECT
-
-        news.*,
-        category.category_name,
-        news_images.image_name
-
-    FROM news
-
-    LEFT JOIN category
-
-    ON news.category_id = category.id
-
-    LEFT JOIN news_images
-
-    ON news.id = news_images.news_id
-
-    {where_clause}
-
-    GROUP BY news.id
-
-    ORDER BY news.id DESC
-
-    LIMIT %s OFFSET %s
-
-    """
-
-    final_values = values + [limit, offset]
-
-    cursor.execute(query, final_values)
-
-    news_list = cursor.fetchall()
-
-    # CATEGORIES
-
-    cursor.execute(
-
-        "SELECT * FROM category WHERE status=1 ORDER BY category_name ASC"
-
-    )
-
-    categories = cursor.fetchall()
-
-    connection.close()
-
-    return templates.TemplateResponse(
-
-        request=request,
-
-        name="admin/news_list.html",
-
-        context={
-
-            "news_list": news_list,
-            "categories": categories,
-            "page": page,
-            "total_pages": total_pages,
-            "total_news": total_news,
-            "search": search,
-            "selected_category_id": int(category_id) if category_id else ""
-
-        }
-
-    )
-
-# ============================================
-# DELETE NEWS
-# ============================================
-
-@app.get("/delete-news/{news_id}")
-def delete_news(news_id: int):
-
-    connection = get_connection()
-
-    cursor = connection.cursor(pymysql.cursors.DictCursor)
-
-    cursor.execute(
-
-        "SELECT * FROM news_images WHERE news_id=%s",
-
-        (news_id,)
-
-    )
-
-    images = cursor.fetchall()
-
-    for image in images:
-
-        image_path = f"static/uploads/{image['image_name']}"
-
-        if os.path.exists(image_path):
-
-            os.remove(image_path)
-
-    cursor.execute(
-
-        "DELETE FROM news_images WHERE news_id=%s",
-
-        (news_id,)
-
-    )
-
-    cursor.execute(
-
-        "DELETE FROM news WHERE id=%s",
-
-        (news_id,)
-
-    )
 
     connection.commit()
 

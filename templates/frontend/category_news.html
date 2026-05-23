@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ current_category.category_name }} | Noyyal Express</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+
+        body{
+
+            background:#f5f5f5;
+            font-family:Arial, Helvetica, sans-serif;
+
+        }
+
+        .news-card img{
+
+            transition:0.4s;
+
+        }
+
+        .news-card:hover img{
+
+            transform:scale(1.08);
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="bg-black text-white py-3 text-center font-bold">
+
+    NOYYAL EXPRESS
+
+</div>
+
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
+
+<div class="bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+
+    <div class="max-w-7xl mx-auto">
+
+        <div class="relative flex items-center gap-6 px-4 py-4 font-semibold">
+
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                HOME
+
+            </a>
+
+            <!-- FIRST 8 CATEGORIES -->
+
+            {% for category in categories[:8] %}
+
+            <a
+                href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                {{ category.category_name }}
+
+            </a>
+
+            {% endfor %}
+
+            <!-- MORE DROPDOWN -->
+
+            {% if categories|length > 8 %}
+
+            <div class="relative">
+
+                <!-- BUTTON -->
+
+                <button
+                    id="moreBtn"
+                    type="button"
+                    class="hover:text-yellow-300 whitespace-nowrap flex items-center gap-2"
+                >
+
+                    MORE
+
+                    <i class="fa fa-angle-down"></i>
+
+                </button>
+
+                <!-- MENU -->
+
+                <div
+                    id="moreMenu"
+                    class="hidden absolute left-0 top-10 bg-white text-black rounded-xl shadow-2xl w-64 overflow-hidden"
+                    style="z-index:9999;"
+                >
+
+                    {% for category in categories[8:] %}
+
+                    <a
+                        href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                        class="block px-5 py-3 hover:bg-red-600 hover:text-white border-b"
+                    >
+
+                        {{ category.category_name }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- DROPDOWN SCRIPT -->
+<!-- ========================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const moreBtn = document.getElementById("moreBtn");
+
+    const moreMenu = document.getElementById("moreMenu");
+
+    if(moreBtn){
+
+        moreBtn.addEventListener("click", function(e){
+
+            e.stopPropagation();
+
+            moreMenu.classList.toggle("hidden");
+
+        });
+
+    }
+
+    document.addEventListener("click", function(){
+
+        if(moreMenu){
+
+            moreMenu.classList.add("hidden");
+
+        }
+
+    });
+
+});
+
+</script>
+
+<!-- CATEGORY BANNER -->
+
+<div class="bg-gradient-to-r from-red-700 to-black text-white py-14">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <h1 class="text-5xl font-bold">
+
+            {{ current_category.category_name }}
+
+        </h1>
+
+        <p class="mt-4 text-gray-200">
+
+            Latest updates and breaking news.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="max-w-7xl mx-auto px-4 mt-10">
+
+    <div class="grid lg:grid-cols-3 gap-8">
+
+        <!-- NEWS -->
+
+        <div class="lg:col-span-2">
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                {% for news in category_news %}
+
+                <a
+                    href="/news/{{ news.id }}/{{ news.slug }}"
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden news-card block"
+                >
+
+                    <div class="overflow-hidden">
+
+                        <img
+                            src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                            class="w-full h-56 object-cover"
+                        >
+
+                    </div>
+
+                    <div class="p-5">
+
+                        <h2 class="text-2xl font-bold line-clamp-2">
+
+                            {{ news.title }}
+
+                        </h2>
+
+                        <p class="text-gray-600 mt-3">
+
+                            {{ news.description[:120] }}...
+
+                        </p>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+
+        <div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-5">
+
+                <h2 class="text-2xl font-bold text-red-600 mb-5">
+
+                    Trending News
+
+                </h2>
+
+                {% for item in trending_news %}
+
+                <a
+                    href="/news/{{ item.id }}/{{ item.slug }}"
+                    class="flex gap-4 mb-5 border-b pb-4"
+                >
+
+                    <img
+                        src="{% if item.image_name %}/static/uploads/{{ item.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                        class="w-28 h-24 object-cover rounded-lg"
+                    >
+
+                    <div>
+
+                        <h3 class="font-bold text-sm leading-6">
+
+                            {{ item.title }}
+
+                        </h3>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
