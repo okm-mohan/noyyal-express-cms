@@ -56,7 +56,7 @@
 
         .ticker-animation{
 
-            animation:ticker 30s linear infinite;
+            animation:ticker 35s linear infinite;
 
         }
 
@@ -80,6 +80,12 @@
 
             border-left:5px solid red;
             padding-left:10px;
+
+        }
+
+        .swiper-pagination-bullet{
+
+            background:white !important;
 
         }
 
@@ -111,10 +117,10 @@
 
         <div class="flex gap-4 text-lg">
 
-            <i class="fab fa-facebook"></i>
-            <i class="fab fa-youtube"></i>
-            <i class="fab fa-instagram"></i>
-            <i class="fab fa-twitter"></i>
+            <i class="fab fa-facebook hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-youtube hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-instagram hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-twitter hover:text-red-500 cursor-pointer"></i>
 
         </div>
 
@@ -148,12 +154,12 @@
 
             </div>
 
-            <!-- CENTER AD -->
+            <!-- AD SECTION -->
 
             <div>
 
                 <div
-                    class="bg-gradient-to-r from-red-600 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                    class="bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
                 >
 
                     <div class="text-center">
@@ -172,7 +178,7 @@
 
                         <p class="text-sm text-gray-200">
 
-                            Contact: +91 XXXXX XXXXX
+                            Contact : +91 XXXXX XXXXX
 
                         </p>
 
@@ -225,19 +231,24 @@
 
 <div class="bg-red-700 text-white sticky top-0 z-50 shadow-lg">
 
-    <div class="max-w-7xl mx-auto relative">
+    <div class="max-w-7xl mx-auto">
 
-        <div class="flex items-center gap-6 px-4 py-4 font-semibold overflow-visible">
+        <div class="relative flex items-center gap-6 px-4 py-4 font-semibold">
 
-            <a href="/" class="hover:text-yellow-300 whitespace-nowrap">
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
 
                 HOME
 
             </a>
 
-            <!-- FIRST 8 CATEGORIES -->
+            <!-- MENU CATEGORIES -->
 
-            {% for category in categories[:8] %}
+            {% for category in menu_categories %}
 
             <a
                 href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
@@ -252,12 +263,13 @@
 
             <!-- MORE MENU -->
 
-            {% if categories|length > 8 %}
+            {% if more_categories %}
 
             <div class="relative">
 
                 <button
                     id="moreBtn"
+                    type="button"
                     class="hover:text-yellow-300 whitespace-nowrap flex items-center gap-2"
                 >
 
@@ -269,10 +281,11 @@
 
                 <div
                     id="moreMenu"
-                    class="hidden absolute top-12 right-0 bg-white text-black rounded-xl shadow-2xl w-60 overflow-hidden"
+                    class="hidden absolute left-0 top-10 bg-white text-black rounded-xl shadow-2xl w-64 overflow-hidden"
+                    style="z-index:9999;"
                 >
 
-                    {% for category in categories[8:] %}
+                    {% for category in more_categories %}
 
                     <a
                         href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
@@ -352,7 +365,7 @@
                     {% for news in hero_news %}
 
                     <a
-                        href="/news/{{ news.id }}/{{ news.slug }}"
+                        href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
                         class="swiper-slide relative block"
                     >
 
@@ -411,18 +424,12 @@
 
                     </h2>
 
-                    <span class="text-sm text-gray-500">
-
-                        Updated
-
-                    </span>
-
                 </div>
 
                 {% for news in latest_news[:3] %}
 
                 <a
-                    href="/news/{{ news.id }}/{{ news.slug }}"
+                    href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
                     class="flex gap-4 mb-5 border-b pb-4 block"
                 >
 
@@ -433,7 +440,7 @@
 
                     <div>
 
-                        <h3 class="font-bold text-sm leading-6 hover:text-red-600 cursor-pointer">
+                        <h3 class="font-bold text-sm leading-6 hover:text-red-600">
 
                             {{ news.title }}
 
@@ -480,7 +487,7 @@
         {% for news in latest_news %}
 
         <a
-            href="/news/{{ news.id }}/{{ news.slug }}"
+            href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
             class="bg-white rounded-2xl overflow-hidden shadow-lg news-card block"
         >
 
@@ -564,7 +571,7 @@
 
             <div class="space-y-2">
 
-                {% for category in categories[:8] %}
+                {% for category in menu_categories %}
 
                 <a
                     href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
@@ -665,39 +672,40 @@
 
         pagination:{
             el:".swiper-pagination",
+            clickable:true,
         }
 
     });
 
     // MORE MENU
 
-    const moreBtn = document.getElementById("moreBtn");
+    document.addEventListener("DOMContentLoaded", function(){
 
-    const moreMenu = document.getElementById("moreMenu");
+        const moreBtn = document.getElementById("moreBtn");
 
-    if(moreBtn){
+        const moreMenu = document.getElementById("moreMenu");
 
-        moreBtn.addEventListener("click", function(){
+        if(moreBtn){
 
-            moreMenu.classList.toggle("hidden");
+            moreBtn.addEventListener("click", function(e){
 
-        });
+                e.stopPropagation();
 
-    }
+                moreMenu.classList.toggle("hidden");
 
-    // CLOSE MENU
-
-    window.addEventListener("click", function(e){
-
-        if(
-            moreBtn &&
-            !moreBtn.contains(e.target) &&
-            !moreMenu.contains(e.target)
-        ){
-
-            moreMenu.classList.add("hidden");
+            });
 
         }
+
+        document.addEventListener("click", function(){
+
+            if(moreMenu){
+
+                moreMenu.classList.add("hidden");
+
+            }
+
+        });
 
     });
 

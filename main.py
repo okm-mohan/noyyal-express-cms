@@ -78,7 +78,9 @@ def frontend_home(
 
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # GET CATEGORIES
+    # ============================================
+    # MENU CATEGORIES
+    # ============================================
 
     cursor.execute(
 
@@ -89,6 +91,32 @@ def frontend_home(
         FROM category
 
         WHERE status=1
+        AND menu_order > 0
+
+        ORDER BY menu_order ASC
+
+        LIMIT 8
+
+        """
+
+    )
+
+    menu_categories = cursor.fetchall()
+
+    # ============================================
+    # MORE MENU CATEGORIES
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+        AND menu_order = 0
 
         ORDER BY category_name ASC
 
@@ -96,9 +124,11 @@ def frontend_home(
 
     )
 
-    categories = cursor.fetchall()
+    more_categories = cursor.fetchall()
 
+    # ============================================
     # HERO NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -127,7 +157,9 @@ def frontend_home(
 
     hero_news = cursor.fetchall()
 
+    # ============================================
     # BREAKING NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -149,7 +181,9 @@ def frontend_home(
 
     breaking_news = cursor.fetchall()
 
+    # ============================================
     # SEARCH CONDITION
+    # ============================================
 
     where_clause = ""
 
@@ -179,7 +213,9 @@ def frontend_home(
 
         ]
 
+    # ============================================
     # LATEST NEWS
+    # ============================================
 
     query = f"""
 
@@ -223,7 +259,8 @@ def frontend_home(
 
         context={
 
-            "categories": categories,
+            "menu_categories": menu_categories,
+            "more_categories": more_categories,
             "hero_news": hero_news,
             "breaking_news": breaking_news,
             "latest_news": latest_news,
@@ -237,7 +274,7 @@ def frontend_home(
 # NEWS DETAIL PAGE
 # ============================================
 
-@app.get("/news/{news_id}/{slug}", response_class=HTMLResponse)
+@app.get("/news/{news_id}/{slug:path}", response_class=HTMLResponse)
 def news_detail(
 
     request: Request,
@@ -252,7 +289,9 @@ def news_detail(
 
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # GET CATEGORIES
+    # ============================================
+    # MENU CATEGORIES
+    # ============================================
 
     cursor.execute(
 
@@ -263,6 +302,32 @@ def news_detail(
         FROM category
 
         WHERE status=1
+        AND menu_order > 0
+
+        ORDER BY menu_order ASC
+
+        LIMIT 8
+
+        """
+
+    )
+
+    menu_categories = cursor.fetchall()
+
+    # ============================================
+    # MORE MENU CATEGORIES
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+        AND menu_order = 0
 
         ORDER BY category_name ASC
 
@@ -270,9 +335,11 @@ def news_detail(
 
     )
 
-    categories = cursor.fetchall()
+    more_categories = cursor.fetchall()
 
-    # GET SINGLE NEWS
+    # ============================================
+    # SINGLE NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -308,8 +375,6 @@ def news_detail(
 
     news = cursor.fetchone()
 
-    # NEWS NOT FOUND
-
     if not news:
 
         return HTMLResponse(
@@ -320,7 +385,9 @@ def news_detail(
 
         )
 
+    # ============================================
     # RELATED NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -360,7 +427,9 @@ def news_detail(
 
     related_news = cursor.fetchall()
 
+    # ============================================
     # TRENDING NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -399,7 +468,8 @@ def news_detail(
 
         context={
 
-            "categories": categories,
+            "menu_categories": menu_categories,
+            "more_categories": more_categories,
             "news": news,
             "related_news": related_news,
             "trending_news": trending_news
@@ -412,7 +482,7 @@ def news_detail(
 # CATEGORY NEWS PAGE
 # ============================================
 
-@app.get("/category/{category_id}/{slug}", response_class=HTMLResponse)
+@app.get("/category/{category_id}/{slug:path}", response_class=HTMLResponse)
 def category_news(
 
     request: Request,
@@ -427,7 +497,9 @@ def category_news(
 
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    # GET ALL CATEGORIES
+    # ============================================
+    # MENU CATEGORIES
+    # ============================================
 
     cursor.execute(
 
@@ -438,6 +510,32 @@ def category_news(
         FROM category
 
         WHERE status=1
+        AND menu_order > 0
+
+        ORDER BY menu_order ASC
+
+        LIMIT 8
+
+        """
+
+    )
+
+    menu_categories = cursor.fetchall()
+
+    # ============================================
+    # MORE MENU CATEGORIES
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+        AND menu_order = 0
 
         ORDER BY category_name ASC
 
@@ -445,9 +543,11 @@ def category_news(
 
     )
 
-    categories = cursor.fetchall()
+    more_categories = cursor.fetchall()
 
+    # ============================================
     # CURRENT CATEGORY
+    # ============================================
 
     cursor.execute(
 
@@ -469,7 +569,9 @@ def category_news(
 
     current_category = cursor.fetchone()
 
+    # ============================================
     # CATEGORY NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -502,7 +604,9 @@ def category_news(
 
     category_news = cursor.fetchall()
 
+    # ============================================
     # TRENDING NEWS
+    # ============================================
 
     cursor.execute(
 
@@ -541,7 +645,8 @@ def category_news(
 
         context={
 
-            "categories": categories,
+            "menu_categories": menu_categories,
+            "more_categories": more_categories,
             "current_category": current_category,
             "category_news": category_news,
             "trending_news": trending_news
@@ -702,6 +807,10 @@ async def save_news(
 
     slug = slugify(title)
 
+    if slug == "":
+
+        slug = "news"
+
     breaking_value = 1 if is_breaking else 0
 
     public_value = 1 if is_public else 0
@@ -762,7 +871,9 @@ async def save_news(
 
     news_id = cursor.lastrowid
 
+    # ============================================
     # SAVE IMAGES
+    # ============================================
 
     for image in images:
 

@@ -9,7 +9,11 @@
 
     <title>{{ current_category.category_name }} | Noyyal Express</title>
 
+    <!-- Tailwind CSS -->
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
 
     <link
         rel="stylesheet"
@@ -37,17 +41,145 @@
 
         }
 
+        .category-title{
+
+            border-left:5px solid red;
+            padding-left:10px;
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
+<!-- ========================================= -->
+<!-- TOP HEADER -->
+<!-- ========================================= -->
+
+<div class="bg-black text-white py-2 px-4">
+
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <div class="flex items-center gap-3">
+
+            <span class="bg-red-600 px-3 py-1 rounded text-sm">
+
+                LIVE
+
+            </span>
+
+            <span id="date-time"></span>
+
+        </div>
+
+        <div class="flex gap-4 text-lg">
+
+            <i class="fab fa-facebook hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-youtube hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-instagram hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-twitter hover:text-red-500 cursor-pointer"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
 <!-- HEADER -->
+<!-- ========================================= -->
 
-<div class="bg-black text-white py-3 text-center font-bold">
+<div class="bg-white shadow">
 
-    NOYYAL EXPRESS
+    <div class="max-w-7xl mx-auto px-4 py-4">
+
+        <div class="grid lg:grid-cols-3 items-center gap-5">
+
+            <!-- LOGO -->
+
+            <div class="flex items-center">
+
+                <a href="/">
+
+                    <img
+                        src="/static/logo/logo.png"
+                        alt="Noyyal Express"
+                        class="h-20 object-contain"
+                    >
+
+                </a>
+
+            </div>
+
+            <!-- AD SECTION -->
+
+            <div>
+
+                <div
+                    class="bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                >
+
+                    <div class="text-center">
+
+                        <p class="text-sm uppercase tracking-widest">
+
+                            Sponsored Advertisement
+
+                        </p>
+
+                        <h2 class="text-2xl font-bold">
+
+                            Your Business Ad Here
+
+                        </h2>
+
+                        <p class="text-sm text-gray-200">
+
+                            Contact : +91 XXXXX XXXXX
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="flex justify-end">
+
+                <form
+                    action="/"
+                    method="GET"
+                    class="relative w-full lg:w-72"
+                >
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search News..."
+                        class="border-2 border-red-600 px-4 py-3 rounded-xl w-full focus:outline-none"
+                    >
+
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-2 bg-red-600 text-white px-4 py-1 rounded-lg"
+                    >
+
+                        <i class="fa fa-search"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
@@ -72,9 +204,9 @@
 
             </a>
 
-            <!-- FIRST 8 CATEGORIES -->
+            <!-- MENU CATEGORIES -->
 
-            {% for category in categories[:8] %}
+            {% for category in menu_categories %}
 
             <a
                 href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
@@ -87,13 +219,11 @@
 
             {% endfor %}
 
-            <!-- MORE DROPDOWN -->
+            <!-- MORE MENU -->
 
-            {% if categories|length > 8 %}
+            {% if more_categories %}
 
             <div class="relative">
-
-                <!-- BUTTON -->
 
                 <button
                     id="moreBtn"
@@ -107,7 +237,7 @@
 
                 </button>
 
-                <!-- MENU -->
+                <!-- DROPDOWN -->
 
                 <div
                     id="moreMenu"
@@ -115,7 +245,7 @@
                     style="z-index:9999;"
                 >
 
-                    {% for category in categories[8:] %}
+                    {% for category in more_categories %}
 
                     <a
                         href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
@@ -141,44 +271,8 @@
 </div>
 
 <!-- ========================================= -->
-<!-- DROPDOWN SCRIPT -->
-<!-- ========================================= -->
-
-<script>
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    const moreBtn = document.getElementById("moreBtn");
-
-    const moreMenu = document.getElementById("moreMenu");
-
-    if(moreBtn){
-
-        moreBtn.addEventListener("click", function(e){
-
-            e.stopPropagation();
-
-            moreMenu.classList.toggle("hidden");
-
-        });
-
-    }
-
-    document.addEventListener("click", function(){
-
-        if(moreMenu){
-
-            moreMenu.classList.add("hidden");
-
-        }
-
-    });
-
-});
-
-</script>
-
 <!-- CATEGORY BANNER -->
+<!-- ========================================= -->
 
 <div class="bg-gradient-to-r from-red-700 to-black text-white py-14">
 
@@ -190,9 +284,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
         </h1>
 
-        <p class="mt-4 text-gray-200">
+        <p class="mt-4 text-gray-200 text-lg">
 
-            Latest updates and breaking news.
+            Latest updates, breaking stories and trending news.
 
         </p>
 
@@ -200,13 +294,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </div>
 
-<!-- MAIN -->
+<!-- ========================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================= -->
 
 <div class="max-w-7xl mx-auto px-4 mt-10">
 
     <div class="grid lg:grid-cols-3 gap-8">
 
-        <!-- NEWS -->
+        <!-- CATEGORY NEWS -->
 
         <div class="lg:col-span-2">
 
@@ -215,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 {% for news in category_news %}
 
                 <a
-                    href="/news/{{ news.id }}/{{ news.slug }}"
+                    href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
                     class="bg-white rounded-2xl shadow-lg overflow-hidden news-card block"
                 >
 
@@ -230,7 +326,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
                     <div class="p-5">
 
-                        <h2 class="text-2xl font-bold line-clamp-2">
+                        <span class="text-red-600 font-bold text-sm">
+
+                            {{ current_category.category_name }}
+
+                        </span>
+
+                        <h2 class="text-2xl font-bold mt-3 line-clamp-2">
 
                             {{ news.title }}
 
@@ -241,6 +343,14 @@ document.addEventListener("DOMContentLoaded", function(){
                             {{ news.description[:120] }}...
 
                         </p>
+
+                        <button
+                            class="mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
+                        >
+
+                            Read More
+
+                        </button>
 
                     </div>
 
@@ -256,6 +366,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
         <div>
 
+            <!-- TRENDING NEWS -->
+
             <div class="bg-white rounded-2xl shadow-xl p-5">
 
                 <h2 class="text-2xl font-bold text-red-600 mb-5">
@@ -267,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 {% for item in trending_news %}
 
                 <a
-                    href="/news/{{ item.id }}/{{ item.slug }}"
+                    href="/news/{{ item.id }}/{{ item.slug or 'news-details' }}"
                     class="flex gap-4 mb-5 border-b pb-4"
                 >
 
@@ -278,11 +390,17 @@ document.addEventListener("DOMContentLoaded", function(){
 
                     <div>
 
-                        <h3 class="font-bold text-sm leading-6">
+                        <h3 class="font-bold text-sm leading-6 hover:text-red-600">
 
                             {{ item.title }}
 
                         </h3>
+
+                        <p class="text-gray-500 text-xs mt-2">
+
+                            {{ item.description[:60] }}...
+
+                        </p>
 
                     </div>
 
@@ -292,11 +410,192 @@ document.addEventListener("DOMContentLoaded", function(){
 
             </div>
 
+            <!-- ADVERTISEMENT -->
+
+            <div
+                class="bg-gradient-to-r from-black to-red-700 rounded-2xl p-8 text-white mt-8 shadow-xl"
+            >
+
+                <h2 class="text-3xl font-bold">
+
+                    Advertise Here
+
+                </h2>
+
+                <p class="mt-4 text-gray-200">
+
+                    Promote your business with Noyyal Express Digital Platform.
+
+                </p>
+
+                <button
+                    class="mt-6 bg-white text-black px-5 py-3 rounded-lg font-bold"
+                >
+
+                    Contact Us
+
+                </button>
+
+            </div>
+
         </div>
 
     </div>
 
 </div>
+
+<!-- ========================================= -->
+<!-- FOOTER -->
+<!-- ========================================= -->
+
+<footer class="bg-black text-white mt-16">
+
+    <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
+
+        <div>
+
+            <img
+                src="/static/logo/logo.png"
+                class="h-16"
+            >
+
+            <p class="mt-4 text-gray-400">
+
+                Premium Tamil Digital News Platform.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Categories
+
+            </h3>
+
+            <div class="space-y-2">
+
+                {% for category in menu_categories %}
+
+                <a
+                    href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                    class="block hover:text-red-500"
+                >
+
+                    {{ category.category_name }}
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Quick Links
+
+            </h3>
+
+            <div class="space-y-2">
+
+                <p>Home</p>
+                <p>Breaking News</p>
+                <p>Politics</p>
+                <p>Technology</p>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Follow Us
+
+            </h3>
+
+            <div class="flex gap-4 text-2xl">
+
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="border-t border-gray-700 py-5 text-center text-gray-400">
+
+        © 2026 Noyyal Express. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+<!-- ========================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================= -->
+
+<script>
+
+    // DATE TIME
+
+    function updateDateTime(){
+
+        const now = new Date();
+
+        document.getElementById("date-time").innerHTML =
+            now.toLocaleString();
+
+    }
+
+    setInterval(updateDateTime,1000);
+
+    updateDateTime();
+
+    // MORE MENU
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+        const moreBtn = document.getElementById("moreBtn");
+
+        const moreMenu = document.getElementById("moreMenu");
+
+        if(moreBtn){
+
+            moreBtn.addEventListener("click", function(e){
+
+                e.stopPropagation();
+
+                moreMenu.classList.toggle("hidden");
+
+            });
+
+        }
+
+        document.addEventListener("click", function(){
+
+            if(moreMenu){
+
+                moreMenu.classList.add("hidden");
+
+            }
+
+        });
+
+    });
+
+</script>
 
 </body>
 
