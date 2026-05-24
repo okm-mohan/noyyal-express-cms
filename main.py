@@ -774,6 +774,434 @@ def add_news_page(request: Request):
 
     )
 
+# =========================================================
+# NEWS LIST PAGE
+# =========================================================
+
+@app.get("/news-list", response_class=HTMLResponse)
+def news_list(
+
+    request: Request,
+
+    page: int = 1,
+
+    search: str = "",
+
+    category_id: int = 0
+
+):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    limit = 10
+
+    offset = (page - 1) * limit
+
+    # ============================================
+    # CATEGORY LIST
+    # ============================================
+
+    cursor.execute("""
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+
+        ORDER BY category_name ASC
+
+    """)
+
+    categories = cursor.fetchall()
+
+    # ============================================
+    # WHERE CONDITION
+    # ============================================
+
+    where_clause = " WHERE 1=1 "
+
+    values = []
+
+    # SEARCH
+
+    if search != "":
+
+        where_clause += """
+
+        AND (
+
+            news.title LIKE %s
+
+            OR news.description LIKE %s
+
+        )
+
+        """
+
+        keyword = "%" + search + "%"
+
+        values.extend([keyword, keyword])
+
+    # CATEGORY FILTER
+
+    if category_id != 0:
+
+        where_clause += """
+
+        AND news.category_id=%s
+
+        """
+
+        values.append(category_id)
+
+    # ============================================
+    # TOTAL NEWS COUNT
+    # ============================================
+
+    count_query = f"""
+
+    SELECT COUNT(*) as total
+
+    FROM news
+
+    {where_clause}
+
+    """
+
+    cursor.execute(count_query, values)
+
+    total_news_result = cursor.fetchone()
+
+    total_news = total_news_result["total"]
+
+    total_pages = (total_news + limit - 1) // limit
+
+    # ============================================
+    # NEWS LIST
+    # ============================================
+
+    query = f"""
+
+    SELECT
+
+        news.*,
+        category.category_name,
+        MIN(news_images.image_name) as image_name
+
+    FROM news
+
+    LEFT JOIN category
+
+    ON news.category_id = category.id
+
+    LEFT JOIN news_images
+
+    ON news.id = news_images.news_id
+
+    {where_clause}
+
+    GROUP BY news.id
+
+    ORDER BY news.id DESC
+
+    LIMIT %s OFFSET %s
+
+    """
+
+    final_values = values + [limit, offset]
+
+    cursor.execute(query, final_values)
+
+    news_list = cursor.fetchall()
+
+    connection.close()
+
+    # ============================================
+    # RETURN TEMPLATE
+    # ============================================
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="admin/news_list.html",
+
+        context={
+
+            "news_list": news_list,
+            "categories": categories,
+            "selected_category_id": category_id,
+            "search": search,
+            "total_news": total_news,
+            "page": page,
+            "total_pages": total_pages
+
+        }
+
+    )
+
+
+# ============================================
+# EDIT NEWS PAGE
+# ============================================
+
+@app.get("/edit-news/{news_id}", response_class=HTMLResponse)
+def edit_news_page(
+
+    request: Request,
+
+    news_id: int
+
+):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # ============================================
+    # GET ALL CATEGORIES
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM category
+
+        WHERE status=1
+
+        ORDER BY category_name ASC
+
+        """
+
+    )
+
+    categories = cursor.fetchall()
+
+    # ============================================
+    # GET SINGLE NEWS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM news
+
+        WHERE id=%s
+
+        LIMIT 1
+
+        """,
+
+        (news_id,)
+
+    )
+
+    news = cursor.fetchone()
+
+    connection.close()
+
+    # NEWS NOT FOUND
+
+    if not news:
+
+        return HTMLResponse(
+
+            content="<h1>News Not Found</h1>",
+
+            status_code=404
+
+        )
+
+    # ============================================
+    # LOAD EDIT PAGE
+    # ============================================
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="admin/edit_news.html",
+
+        context={
+
+            "news": news,
+            "categories": categories
+
+        }
+
+    )
+
+
+# ============================================
+# UPDATE NEWS
+# ============================================
+
+@app.post("/update-news/{news_id}")
+async def update_news(
+
+    news_id: int,
+
+    category_id: int = Form(0),
+
+    channel_id: int = Form(0),
+
+    title: str = Form(""),
+
+    description: str = Form(""),
+
+    source: str = Form(None),
+
+    video_link: str = Form(None),
+
+    video_type: str = Form(None),
+
+    is_breaking: str = Form(None),
+
+    is_public: str = Form(None),
+
+    send_notification: str = Form(None)
+
+):
+
+    slug = slugify(title)
+
+    if slug == "":
+
+        slug = "news"
+
+    breaking_value = 1 if is_breaking else 0
+
+    public_value = 1 if is_public else 0
+
+    notify_value = 1 if send_notification else 0
+
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    sql = """
+
+    UPDATE news
+
+    SET
+
+        category_id=%s,
+        channel_id=%s,
+        title=%s,
+        slug=%s,
+        description=%s,
+        source=%s,
+        video_link=%s,
+        link_type=%s,
+        is_breaking=%s,
+        is_public=%s,
+        notify=%s
+
+    WHERE id=%s
+
+    """
+
+    values = (
+
+        category_id,
+        channel_id,
+        title,
+        slug,
+        description,
+        source,
+        video_link,
+        video_type,
+        breaking_value,
+        public_value,
+        notify_value,
+        news_id
+
+    )
+
+    cursor.execute(sql, values)
+
+    connection.commit()
+
+    connection.close()
+
+    return RedirectResponse(
+
+        url="/news-list",
+
+        status_code=303
+
+    )
+
+
+# ============================================
+# DELETE NEWS
+# ============================================
+
+@app.get("/delete-news/{news_id}")
+def delete_news(news_id: int):
+
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    # ============================================
+    # DELETE NEWS IMAGES FIRST
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        DELETE FROM news_images
+
+        WHERE news_id=%s
+
+        """,
+
+        (news_id,)
+
+    )
+
+    # ============================================
+    # DELETE NEWS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        DELETE FROM news
+
+        WHERE id=%s
+
+        """,
+
+        (news_id,)
+
+    )
+
+    connection.commit()
+
+    connection.close()
+
+    return RedirectResponse(
+
+        url="/news-list",
+
+        status_code=303
+
+    )
+
+
 # ============================================
 # SAVE NEWS
 # ============================================
