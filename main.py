@@ -655,6 +655,280 @@ def category_news(
 
     )
 
+
+# ============================================
+# SETTINGS PAGE
+# ============================================
+
+@app.get("/settings", response_class=HTMLResponse)
+def settings_page(request: Request):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # ============================================
+    # GET SETTINGS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM settings
+
+        ORDER BY id DESC
+
+        LIMIT 1
+
+        """
+
+    )
+
+    settings = cursor.fetchone()
+
+    connection.close()
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="admin/settings.html",
+
+        context={
+
+            "settings": settings
+
+        }
+
+    )
+
+
+# ============================================
+# UPDATE SETTINGS
+# ============================================
+
+@app.post("/update-settings")
+async def update_settings(
+
+    website_name: str = Form(""),
+
+    contact_email: str = Form(""),
+
+    phone: str = Form(""),
+
+    address: str = Form(""),
+
+    meta_title: str = Form(""),
+
+    meta_description: str = Form(""),
+
+    facebook_url: str = Form(""),
+
+    youtube_url: str = Form(""),
+
+    instagram_url: str = Form(""),
+
+    twitter_url: str = Form(""),
+
+    footer_text: str = Form(""),
+
+    logo: UploadFile = File(None),
+
+    favicon: UploadFile = File(None)
+
+):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # ============================================
+    # CHECK SETTINGS EXISTS
+    # ============================================
+
+    cursor.execute(
+
+        """
+
+        SELECT *
+
+        FROM settings
+
+        LIMIT 1
+
+        """
+
+    )
+
+    existing_settings = cursor.fetchone()
+
+    # ============================================
+    # DEFAULT VALUES
+    # ============================================
+
+    logo_name = ""
+
+    favicon_name = ""
+
+    if existing_settings:
+
+        logo_name = existing_settings["logo"]
+
+        favicon_name = existing_settings["favicon"]
+
+    # ============================================
+    # SAVE LOGO
+    # ============================================
+
+    if logo and logo.filename != "":
+
+        logo_name = logo.filename
+
+        logo_path = f"static/uploads/{logo_name}"
+
+        with open(logo_path, "wb") as buffer:
+
+            shutil.copyfileobj(logo.file, buffer)
+
+    # ============================================
+    # SAVE FAVICON
+    # ============================================
+
+    if favicon and favicon.filename != "":
+
+        favicon_name = favicon.filename
+
+        favicon_path = f"static/uploads/{favicon_name}"
+
+        with open(favicon_path, "wb") as buffer:
+
+            shutil.copyfileobj(favicon.file, buffer)
+
+    # ============================================
+    # UPDATE SETTINGS
+    # ============================================
+
+    if existing_settings:
+
+        cursor.execute(
+
+            """
+
+            UPDATE settings
+
+            SET
+
+                website_name=%s,
+                contact_email=%s,
+                phone=%s,
+                address=%s,
+                meta_title=%s,
+                meta_description=%s,
+                facebook_url=%s,
+                youtube_url=%s,
+                instagram_url=%s,
+                twitter_url=%s,
+                footer_text=%s,
+                logo=%s,
+                favicon=%s
+
+            WHERE id=%s
+
+            """,
+
+            (
+
+                website_name,
+                contact_email,
+                phone,
+                address,
+                meta_title,
+                meta_description,
+                facebook_url,
+                youtube_url,
+                instagram_url,
+                twitter_url,
+                footer_text,
+                logo_name,
+                favicon_name,
+                existing_settings["id"]
+
+            )
+
+        )
+
+    # ============================================
+    # INSERT SETTINGS
+    # ============================================
+
+    else:
+
+        cursor.execute(
+
+            """
+
+            INSERT INTO settings(
+
+                website_name,
+                contact_email,
+                phone,
+                address,
+                meta_title,
+                meta_description,
+                facebook_url,
+                youtube_url,
+                instagram_url,
+                twitter_url,
+                footer_text,
+                logo,
+                favicon
+
+            )
+
+            VALUES(
+
+                %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+
+            )
+
+            """,
+
+            (
+
+                website_name,
+                contact_email,
+                phone,
+                address,
+                meta_title,
+                meta_description,
+                facebook_url,
+                youtube_url,
+                instagram_url,
+                twitter_url,
+                footer_text,
+                logo_name,
+                favicon_name
+
+            )
+
+        )
+
+    connection.commit()
+
+    connection.close()
+
+    return RedirectResponse(
+
+        url="/settings",
+
+        status_code=303
+
+    )
+
+
 # ============================================
 # ADMIN LOGIN PAGE
 # ============================================
@@ -1350,5 +1624,128 @@ async def save_news(
         url="/news-list",
 
         status_code=303
+
+    )
+
+
+# ============================================
+# ANALYTICS PAGE
+# ============================================
+
+@app.get("/analytics", response_class=HTMLResponse)
+def analytics_page(request: Request):
+
+    connection = get_connection()
+
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    # TOTAL NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT COUNT(*) as total_news
+
+        FROM news
+
+        """
+
+    )
+
+    total_news = cursor.fetchone()["total_news"]
+
+    # BREAKING NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT COUNT(*) as breaking_news
+
+        FROM news
+
+        WHERE is_breaking=1
+
+        """
+
+    )
+
+    breaking_news = cursor.fetchone()["breaking_news"]
+
+    # TOTAL VIEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT SUM(tot_view) as total_views
+
+        FROM news
+
+        """
+
+    )
+
+    views_result = cursor.fetchone()
+
+    total_views = views_result["total_views"] or 0
+
+    # TOTAL CATEGORIES
+
+    cursor.execute(
+
+        """
+
+        SELECT COUNT(*) as total_categories
+
+        FROM category
+
+        """
+
+    )
+
+    total_categories = cursor.fetchone()["total_categories"]
+
+    # TOP VIEWED NEWS
+
+    cursor.execute(
+
+        """
+
+        SELECT
+
+            title,
+            tot_view
+
+        FROM news
+
+        ORDER BY tot_view DESC
+
+        LIMIT 5
+
+        """
+
+    )
+
+    top_news = cursor.fetchall()
+
+    connection.close()
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="admin/analytics.html",
+
+        context={
+
+            "total_news": total_news,
+            "breaking_news": breaking_news,
+            "total_views": total_views,
+            "total_categories": total_categories,
+            "top_news": top_news
+
+        }
 
     )
