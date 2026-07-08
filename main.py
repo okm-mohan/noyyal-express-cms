@@ -50,16 +50,34 @@ if not os.path.exists("static/uploads"):
 
 def get_connection():
 
-    connection = pymysql.connect(
+    configs = [
+        {
+            "host": os.getenv("DB_HOST", "localhost"),
+            "user": os.getenv("DB_USER", "noyyalexpress_admin"),
+            "password": os.getenv("DB_PASSWORD", "Epiclife@cbe32#"),
+            "database": os.getenv("DB_NAME", "noyyalexpress")
+        },
+        {
+            "host": "localhost",
+            "user": "root",
+            "password": "",
+            "database": "noyyalexpress"
+        }
+    ]
 
-        host="localhost",
-        user="root",
-        password="",
-        database="noyyalexpress"
+    last_error = None
 
-    )
+    for config in configs:
 
-    return connection
+        try:
+
+            return pymysql.connect(**config)
+
+        except pymysql.MySQLError as error:
+
+            last_error = error
+
+    raise last_error
 
 # ============================================
 # FRONTEND HOME PAGE
