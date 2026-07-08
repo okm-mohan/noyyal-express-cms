@@ -205,52 +205,15 @@
 
     </style>
 
+    <link rel="stylesheet" href="/static/css/admin-sidebar.css">
+
 </head>
 
 <body>
 
 <!-- SIDEBAR -->
 
-<div class="sidebar">
-
-    <div class="logo-area">
-
-        <h3>
-            📰 NOYYAL
-        </h3>
-
-        <small>
-            EXPRESS CMS
-        </small>
-
-    </div>
-
-    <a href="/dashboard">
-        <i class="fa fa-home"></i>
-        Dashboard
-    </a>
-
-    <a href="/add-news">
-        <i class="fa fa-plus-circle"></i>
-        Add News
-    </a>
-
-    <a href="/news-list">
-        <i class="fa fa-list"></i>
-        News List
-    </a>
-
-    <a href="/analytics">
-        <i class="fa fa-chart-line"></i>
-        Analytics
-    </a>
-
-    <a href="/settings">
-        <i class="fa fa-cog"></i>
-        Settings
-    </a>
-
-</div>
+{% include 'includes/sidebar.html' %}
 
 <!-- MAIN -->
 
