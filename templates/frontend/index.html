@@ -67,6 +67,8 @@
 
     </style>
 
+    <link rel="stylesheet" href="/static/css/news-theme.css">
+
 </head>
 
 <body>
@@ -75,13 +77,13 @@
 <!-- TOP HEADER -->
 <!-- ========================================= -->
 
-<div class="bg-black text-white py-2 px-4">
+<div class="top-strip bg-black text-white py-2 px-4">
 
     <div class="max-w-7xl mx-auto flex justify-between items-center">
 
         <div class="flex items-center gap-3">
 
-            <span class="bg-red-600 px-3 py-1 rounded text-sm">
+            <span class="live-pill bg-red-600 px-3 py-1 rounded text-sm">
                 LIVE
             </span>
 
@@ -106,7 +108,7 @@
 <!-- HEADER -->
 <!-- ========================================= -->
 
-<div class="bg-white shadow">
+<div class="site-header bg-white shadow">
 
     <div class="max-w-7xl mx-auto px-4 py-4">
 
@@ -121,7 +123,7 @@
                     <img
                         src="/static/logo/logo.png"
                         alt="Noyyal Express"
-                        class="h-20 object-contain"
+                        class="site-logo h-20 object-contain"
                     >
 
                 </a>
@@ -133,7 +135,7 @@
             <div>
 
                 <div
-                    class="bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                    class="ad-panel bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
                 >
 
                     <div class="text-center">
@@ -158,7 +160,7 @@
 
             <!-- SEARCH -->
 
-            <div class="flex justify-end">
+            <div class="site-search flex justify-end">
 
                 <form
                     action="/"
@@ -197,11 +199,11 @@
 <!-- NAVBAR -->
 <!-- ========================================= -->
 
-<div class="bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+<div class="main-nav bg-red-700 text-white sticky top-0 z-50 shadow-lg">
 
     <div class="max-w-7xl mx-auto">
 
-        <div class="relative flex items-center gap-6 px-4 py-4 font-semibold">
+        <div class="nav-scroll relative flex items-center gap-3 px-4 py-4 font-semibold">
 
             <a
                 href="/"
@@ -274,11 +276,11 @@
 <!-- BREAKING NEWS -->
 <!-- ========================================= -->
 
-<div class="bg-black text-white overflow-hidden">
+<div class="breaking-bar bg-black text-white overflow-hidden">
 
     <div class="flex">
 
-        <div class="bg-red-600 px-5 py-3 font-bold whitespace-nowrap">
+        <div class="breaking-label bg-red-600 px-5 py-3 font-bold whitespace-nowrap">
             BREAKING NEWS
         </div>
 
@@ -289,7 +291,7 @@
                 {% for news in breaking_news %}
 
                 <span class="mx-10">
-                    🔴 {{ news.title }}
+                    Breaking: {{ news.title }}
                 </span>
 
                 {% endfor %}
@@ -332,7 +334,7 @@
 
                         <div class="absolute inset-0 hero-overlay"></div>
 
-                        <div class="absolute bottom-10 left-10 text-white max-w-2xl">
+                        <div class="hero-copy absolute bottom-10 left-10 text-white max-w-2xl">
 
                             <span class="bg-red-600 px-4 py-1 rounded text-sm">
                                 TOP STORY
@@ -364,7 +366,7 @@
 
         <div class="space-y-5">
 
-            <div class="bg-white rounded-2xl shadow-xl p-5">
+            <div class="story-panel bg-white rounded-2xl shadow-xl p-5">
 
                 <div class="flex justify-between items-center mb-5">
 
@@ -378,7 +380,7 @@
 
                 <a
                     href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
-                    class="flex gap-4 mb-5 border-b pb-4 block"
+                    class="side-story flex gap-4 mb-5 border-b pb-4 block"
                 >
 
                     <img
@@ -418,7 +420,7 @@
 
     <div class="flex justify-between items-center mb-6">
 
-        <h2 class="text-3xl font-bold category-title">
+        <h2 class="section-heading text-3xl font-bold category-title">
             Latest News
         </h2>
 
@@ -444,7 +446,7 @@
 
             <div class="p-4">
 
-                <span class="text-red-600 font-bold text-sm">
+                <span class="news-label text-red-600 font-bold text-sm">
                     NEWS UPDATE
                 </span>
 
@@ -457,7 +459,7 @@
                 </p>
 
                 <button
-                    class="mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
+                    class="read-more-btn mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
                 >
                     Read More
                 </button>
@@ -476,7 +478,7 @@
 <!-- FOOTER -->
 <!-- ========================================= -->
 
-<footer class="bg-black text-white mt-16">
+<footer class="footer-pro bg-black text-white mt-16">
 
     <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
 
@@ -541,7 +543,7 @@
                 Follow Us
             </h3>
 
-            <div class="flex gap-4 text-2xl">
+            <div class="social-icons flex gap-4 text-2xl">
 
                 <i class="fab fa-facebook"></i>
                 <i class="fab fa-youtube"></i>
@@ -555,7 +557,7 @@
     </div>
 
     <div class="border-t border-gray-700 py-5 text-center text-gray-400">
-        © 2026 Noyyal Express. All Rights Reserved.
+        &copy; 2026 Noyyal Express. All Rights Reserved.
     </div>
 
 </footer>

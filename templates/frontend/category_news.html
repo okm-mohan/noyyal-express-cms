@@ -50,6 +50,8 @@
 
     </style>
 
+    <link rel="stylesheet" href="/static/css/news-theme.css">
+
 </head>
 
 <body>
@@ -58,13 +60,13 @@
 <!-- TOP HEADER -->
 <!-- ========================================= -->
 
-<div class="bg-black text-white py-2 px-4">
+<div class="top-strip bg-black text-white py-2 px-4">
 
     <div class="max-w-7xl mx-auto flex justify-between items-center">
 
         <div class="flex items-center gap-3">
 
-            <span class="bg-red-600 px-3 py-1 rounded text-sm">
+            <span class="live-pill bg-red-600 px-3 py-1 rounded text-sm">
 
                 LIVE
 
@@ -91,7 +93,7 @@
 <!-- HEADER -->
 <!-- ========================================= -->
 
-<div class="bg-white shadow">
+<div class="site-header bg-white shadow">
 
     <div class="max-w-7xl mx-auto px-4 py-4">
 
@@ -106,7 +108,7 @@
                     <img
                         src="/static/logo/logo.png"
                         alt="Noyyal Express"
-                        class="h-20 object-contain"
+                        class="site-logo h-20 object-contain"
                     >
 
                 </a>
@@ -118,7 +120,7 @@
             <div>
 
                 <div
-                    class="bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                    class="ad-panel bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
                 >
 
                     <div class="text-center">
@@ -149,7 +151,7 @@
 
             <!-- SEARCH -->
 
-            <div class="flex justify-end">
+            <div class="site-search flex justify-end">
 
                 <form
                     action="/"
@@ -187,11 +189,11 @@
 <!-- NAVBAR -->
 <!-- ========================================= -->
 
-<div class="bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+<div class="main-nav bg-red-700 text-white sticky top-0 z-50 shadow-lg">
 
     <div class="max-w-7xl mx-auto">
 
-        <div class="relative flex items-center gap-6 px-4 py-4 font-semibold">
+        <div class="nav-scroll relative flex items-center gap-3 px-4 py-4 font-semibold">
 
             <!-- HOME -->
 
@@ -274,7 +276,7 @@
 <!-- CATEGORY BANNER -->
 <!-- ========================================= -->
 
-<div class="bg-gradient-to-r from-red-700 to-black text-white py-14">
+<div class="category-banner bg-gradient-to-r from-red-700 to-black text-white py-14">
 
     <div class="max-w-7xl mx-auto px-4">
 
@@ -326,7 +328,7 @@
 
                     <div class="p-5">
 
-                        <span class="text-red-600 font-bold text-sm">
+                        <span class="news-label text-red-600 font-bold text-sm">
 
                             {{ current_category.category_name }}
 
@@ -345,7 +347,7 @@
                         </p>
 
                         <button
-                            class="mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
+                            class="read-more-btn mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
                         >
 
                             Read More
@@ -368,7 +370,7 @@
 
             <!-- TRENDING NEWS -->
 
-            <div class="bg-white rounded-2xl shadow-xl p-5">
+            <div class="story-panel bg-white rounded-2xl shadow-xl p-5">
 
                 <h2 class="text-2xl font-bold text-red-600 mb-5">
 
@@ -380,7 +382,7 @@
 
                 <a
                     href="/news/{{ item.id }}/{{ item.slug or 'news-details' }}"
-                    class="flex gap-4 mb-5 border-b pb-4"
+                    class="side-story flex gap-4 mb-5 border-b pb-4"
                 >
 
                     <img
@@ -413,7 +415,7 @@
             <!-- ADVERTISEMENT -->
 
             <div
-                class="bg-gradient-to-r from-black to-red-700 rounded-2xl p-8 text-white mt-8 shadow-xl"
+                class="ad-panel bg-gradient-to-r from-black to-red-700 rounded-2xl p-8 text-white mt-8 shadow-xl"
             >
 
                 <h2 class="text-3xl font-bold">
@@ -448,7 +450,7 @@
 <!-- FOOTER -->
 <!-- ========================================= -->
 
-<footer class="bg-black text-white mt-16">
+<footer class="footer-pro bg-black text-white mt-16">
 
     <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
 
@@ -521,7 +523,7 @@
 
             </h3>
 
-            <div class="flex gap-4 text-2xl">
+            <div class="social-icons flex gap-4 text-2xl">
 
                 <i class="fab fa-facebook"></i>
                 <i class="fab fa-youtube"></i>
@@ -536,7 +538,7 @@
 
     <div class="border-t border-gray-700 py-5 text-center text-gray-400">
 
-        © 2026 Noyyal Express. All Rights Reserved.
+        &copy; 2026 Noyyal Express. All Rights Reserved.
 
     </div>
 
