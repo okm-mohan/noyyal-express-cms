@@ -17,6 +17,9 @@ import os
 import pymysql
 
 from slugify import slugify
+from env_loader import load_local_env
+
+load_local_env()
 
 # ============================================
 # FASTAPI APP
@@ -50,34 +53,14 @@ if not os.path.exists("static/uploads"):
 
 def get_connection():
 
-    configs = [
-        {
-            "host": os.getenv("DB_HOST", "localhost"),
-            "user": os.getenv("DB_USER", "noyyalexpress_admin"),
-            "password": os.getenv("DB_PASSWORD", "Epiclife@cbe32#"),
-            "database": os.getenv("DB_NAME", "noyyalexpress")
-        },
-        {
-            "host": "localhost",
-            "user": "root",
-            "password": "",
-            "database": "noyyalexpress"
-        }
-    ]
-
-    last_error = None
-
-    for config in configs:
-
-        try:
-
-            return pymysql.connect(**config)
-
-        except pymysql.MySQLError as error:
-
-            last_error = error
-
-    raise last_error
+    return pymysql.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "noyyalexpress_admin"),
+        password=os.getenv("DB_PASSWORD", ""),
+        database=os.getenv("DB_NAME", "noyyalexpress"),
+        port=int(os.getenv("DB_PORT", "3306")),
+        cursorclass=pymysql.cursors.DictCursor,
+    )
 
 # ============================================
 # FRONTEND HOME PAGE
