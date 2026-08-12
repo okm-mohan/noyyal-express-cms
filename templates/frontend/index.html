@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Noyyal Express</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+
+        body{
+            background:#f5f5f5;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        .hero-overlay{
+            background:linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+        }
+
+        .news-card img{
+            transition:0.4s;
+        }
+
+        .news-card:hover img{
+            transform:scale(1.08);
+        }
+
+        .ticker-animation{
+            animation:ticker 35s linear infinite;
+        }
+
+        @keyframes ticker{
+            0%{
+                transform:translateX(100%);
+            }
+            100%{
+                transform:translateX(-100%);
+            }
+        }
+
+        .category-title{
+            border-left:5px solid red;
+            padding-left:10px;
+        }
+
+        .swiper-pagination-bullet{
+            background:white !important;
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="/static/css/news-theme.css">
+
+</head>
+
+<body>
+
+<!-- ========================================= -->
+<!-- TOP HEADER -->
+<!-- ========================================= -->
+
+<div class="top-strip bg-black text-white py-2 px-4">
+
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <div class="flex items-center gap-3">
+
+            <span class="live-pill bg-red-600 px-3 py-1 rounded text-sm">
+                LIVE
+            </span>
+
+            <span id="date-time"></span>
+
+        </div>
+
+        <div class="flex gap-4 text-lg">
+
+            <i class="fab fa-facebook hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-youtube hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-instagram hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-twitter hover:text-red-500 cursor-pointer"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- HEADER -->
+<!-- ========================================= -->
+
+<div class="site-header bg-white shadow">
+
+    <div class="max-w-7xl mx-auto px-4 py-4">
+
+        <div class="grid lg:grid-cols-3 items-center gap-5">
+
+            <!-- LOGO -->
+
+            <div class="flex items-center">
+
+                <a href="/">
+
+                    <img
+                        src="/static/logo/logo.png"
+                        alt="Noyyal Express"
+                        class="site-logo h-20 object-contain"
+                    >
+
+                </a>
+
+            </div>
+
+            <!-- AD SECTION -->
+
+            <div>
+
+                <div
+                    class="ad-panel bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                >
+
+                    <div class="text-center">
+
+                        <p class="text-sm uppercase tracking-widest">
+                            Sponsored Advertisement
+                        </p>
+
+                        <h2 class="text-2xl font-bold">
+                            Your Business Ad Here
+                        </h2>
+
+                        <p class="text-sm text-gray-200">
+                            Contact : +91 XXXXX XXXXX
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="site-search flex justify-end">
+
+                <form
+                    action="/"
+                    method="GET"
+                    class="relative w-full lg:w-72"
+                >
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search News..."
+                        value="{{ search }}"
+                        class="border-2 border-red-600 px-4 py-3 rounded-xl w-full focus:outline-none"
+                    >
+
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-2 bg-red-600 text-white px-4 py-1 rounded-lg"
+                    >
+
+                        <i class="fa fa-search"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
+
+<div class="main-nav bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+
+    <div class="max-w-7xl mx-auto">
+
+        <div class="nav-scroll relative flex items-center gap-3 px-4 py-4 font-semibold">
+
+            <a
+                href="/"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+                HOME
+            </a>
+
+            {% for category in menu_categories %}
+
+            <a
+                href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                {{ category.category_name }}
+
+            </a>
+
+            {% endfor %}
+
+            {% if more_categories %}
+
+            <div class="relative">
+
+                <button
+                    id="moreBtn"
+                    type="button"
+                    class="hover:text-yellow-300 whitespace-nowrap flex items-center gap-2"
+                >
+
+                    MORE
+
+                    <i class="fa fa-angle-down"></i>
+
+                </button>
+
+                <div
+                    id="moreMenu"
+                    class="hidden absolute left-0 top-10 bg-white text-black rounded-xl shadow-2xl w-64 overflow-hidden"
+                    style="z-index:9999;"
+                >
+
+                    {% for category in more_categories %}
+
+                    <a
+                        href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                        class="block px-5 py-3 hover:bg-red-600 hover:text-white border-b"
+                    >
+
+                        {{ category.category_name }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- BREAKING NEWS -->
+<!-- ========================================= -->
+
+<div class="breaking-bar bg-black text-white overflow-hidden">
+
+    <div class="flex">
+
+        <div class="breaking-label bg-red-600 px-5 py-3 font-bold whitespace-nowrap">
+            BREAKING NEWS
+        </div>
+
+        <div class="overflow-hidden flex items-center w-full">
+
+            <div class="ticker-animation whitespace-nowrap">
+
+                {% for news in breaking_news %}
+
+                <span class="mx-10">
+                    Breaking: {{ news.title }}
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- HERO SECTION -->
+<!-- ========================================= -->
+
+<div class="max-w-7xl mx-auto mt-6 px-4">
+
+    <div class="grid lg:grid-cols-3 gap-6">
+
+        <!-- HERO SLIDER -->
+
+        <div class="lg:col-span-2">
+
+            <div class="swiper heroSwiper rounded-2xl overflow-hidden shadow-2xl">
+
+                <div class="swiper-wrapper">
+
+                    {% for news in hero_news %}
+
+                    <a
+                        href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
+                        class="swiper-slide relative block"
+                    >
+
+                        <img
+                            src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                            class="w-full h-[520px] object-cover"
+                        >
+
+                        <div class="absolute inset-0 hero-overlay"></div>
+
+                        <div class="hero-copy absolute bottom-10 left-10 text-white max-w-2xl">
+
+                            <span class="bg-red-600 px-4 py-1 rounded text-sm">
+                                TOP STORY
+                            </span>
+
+                            <h2 class="text-4xl font-bold mt-4 leading-tight">
+                                {{ news.title }}
+                            </h2>
+
+                            <p class="mt-4 text-gray-200">
+                                {{ news.description | striptags | truncate(150) }}
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="swiper-pagination"></div>
+
+            </div>
+
+        </div>
+
+        <!-- TRENDING -->
+
+        <div class="space-y-5">
+
+            <div class="story-panel bg-white rounded-2xl shadow-xl p-5">
+
+                <div class="flex justify-between items-center mb-5">
+
+                    <h2 class="text-2xl font-bold text-red-600">
+                        Trending News
+                    </h2>
+
+                </div>
+
+                {% for news in latest_news[:3] %}
+
+                <a
+                    href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
+                    class="side-story flex gap-4 mb-5 border-b pb-4 block"
+                >
+
+                    <img
+                        src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                        class="w-28 h-24 object-cover rounded-lg"
+                    >
+
+                    <div>
+
+                        <h3 class="font-bold text-sm leading-6 hover:text-red-600">
+                            {{ news.title }}
+                        </h3>
+
+                        <p class="text-gray-500 text-xs mt-2">
+                            {{ news.description | striptags | truncate(60) }}
+                        </p>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- LATEST NEWS -->
+<!-- ========================================= -->
+
+<div class="max-w-7xl mx-auto mt-12 px-4">
+
+    <div class="flex justify-between items-center mb-6">
+
+        <h2 class="section-heading text-3xl font-bold category-title">
+            Latest News
+        </h2>
+
+    </div>
+
+    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
+
+        {% for news in latest_news %}
+
+        <a
+            href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
+            class="bg-white rounded-2xl overflow-hidden shadow-lg news-card block"
+        >
+
+            <div class="overflow-hidden">
+
+                <img
+                    src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                    class="w-full h-56 object-cover"
+                >
+
+            </div>
+
+            <div class="p-4">
+
+                <span class="news-label text-red-600 font-bold text-sm">
+                    NEWS UPDATE
+                </span>
+
+                <h3 class="text-xl font-bold mt-3 line-clamp-2">
+                    {{ news.title }}
+                </h3>
+
+                <p class="text-gray-600 mt-3 text-sm">
+                    {{ news.description | striptags | truncate(100) }}
+                </p>
+
+                <button
+                    class="read-more-btn mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
+                >
+                    Read More
+                </button>
+
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- FOOTER -->
+<!-- ========================================= -->
+
+<footer class="footer-pro bg-black text-white mt-16">
+
+    <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
+
+        <div>
+
+            <img
+                src="/static/logo/logo.png"
+                class="h-16"
+            >
+
+            <p class="mt-4 text-gray-400">
+                Premium Tamil Digital News Platform.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+                Categories
+            </h3>
+
+            <div class="space-y-2">
+
+                {% for category in menu_categories %}
+
+                <a
+                    href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                    class="block hover:text-red-500"
+                >
+
+                    {{ category.category_name }}
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+                Quick Links
+            </h3>
+
+            <div class="space-y-2">
+
+                <p>Home</p>
+                <p>Breaking News</p>
+                <p>Politics</p>
+                <p>Technology</p>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+                Follow Us
+            </h3>
+
+            <div class="social-icons flex gap-4 text-2xl">
+
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="border-t border-gray-700 py-5 text-center text-gray-400">
+        &copy; 2026 Noyyal Express. All Rights Reserved.
+    </div>
+
+</footer>
+
+<!-- ========================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+
+    // DATE + LIVE TIME
+
+    function updateDateTime(){
+
+        const now = new Date();
+
+        // DATE
+
+        const day = String(now.getDate()).padStart(2, '0');
+
+        const monthNames = [
+            "Jan","Feb","Mar","Apr","May","Jun",
+            "Jul","Aug","Sep","Oct","Nov","Dec"
+        ];
+
+        const month = monthNames[now.getMonth()];
+
+        const year = now.getFullYear();
+
+        // TIME
+
+        let hours = now.getHours();
+
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+        hours = hours % 12;
+
+        hours = hours ? hours : 12;
+
+        hours = String(hours).padStart(2, '0');
+
+        // FINAL OUTPUT
+
+        document.getElementById("date-time").innerHTML =
+            `${day}/${month}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
+
+    }
+
+    setInterval(updateDateTime,1000);
+
+    updateDateTime();
+
+    // HERO SLIDER
+
+    var swiper = new Swiper(".heroSwiper", {
+
+        loop:true,
+
+        autoplay:{
+            delay:3500,
+            disableOnInteraction:false,
+        },
+
+        pagination:{
+            el:".swiper-pagination",
+            clickable:true,
+        }
+
+    });
+
+    // MORE MENU
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+        const moreBtn = document.getElementById("moreBtn");
+
+        const moreMenu = document.getElementById("moreMenu");
+
+        if(moreBtn){
+
+            moreBtn.addEventListener("click", function(e){
+
+                e.stopPropagation();
+
+                moreMenu.classList.toggle("hidden");
+
+            });
+
+        }
+
+        document.addEventListener("click", function(){
+
+            if(moreMenu){
+
+                moreMenu.classList.add("hidden");
+
+            }
+
+        });
+
+    });
+
+</script>
+</body>
+</html>

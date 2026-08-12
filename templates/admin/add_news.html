@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Add News</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdn.ckeditor.com/4.25.1-lts/full/ckeditor.js"></script>
+
+<style>
+
+:root{
+    --sidebar:#101827;
+    --sidebar-2:#17223a;
+    --accent:#b91c1c;
+    --accent-dark:#7f1d1d;
+    --blue:#2563eb;
+    --ink:#111827;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --surface:#ffffff;
+    --page:#f5f7fb;
+}
+
+body{
+    background:
+        linear-gradient(90deg, rgba(15,23,42,0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(15,23,42,0.035) 1px, transparent 1px),
+        var(--page);
+    background-size:28px 28px;
+    color:var(--ink);
+    font-family:Arial, Helvetica, sans-serif;
+    overflow-x:hidden;
+}
+
+.sidebar{
+    width:248px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    background:linear-gradient(180deg, var(--sidebar), var(--sidebar-2));
+    padding-top:22px;
+    box-shadow:8px 0 28px rgba(15,23,42,0.18);
+    overflow-y:auto;
+}
+
+.logo-area{
+    margin:0 18px 28px;
+    padding:16px;
+    color:white;
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px;
+    background:rgba(255,255,255,0.05);
+}
+
+.logo-area h3{
+    margin:0;
+    font-size:23px;
+    font-weight:800;
+}
+
+.logo-area small{
+    color:#cbd5e1;
+    font-size:12px;
+    letter-spacing:0.08em;
+}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:13px 22px;
+    margin:3px 12px;
+    border-radius:8px;
+    transition:0.2s ease;
+    font-size:14px;
+    font-weight:600;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+    background:rgba(185,28,28,0.95);
+    color:white;
+    transform:translateX(4px);
+}
+
+.main-content{
+    margin-left:248px;
+    padding:24px 28px 40px;
+}
+
+.topbar{
+    background:rgba(255,255,255,0.94);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 24px;
+    box-shadow:0 16px 34px rgba(15,23,42,0.08);
+    margin-bottom:22px;
+    backdrop-filter:blur(14px);
+}
+
+.topbar h4{
+    margin:0;
+    font-weight:800;
+    color:#0f172a;
+}
+
+.topbar .admin-welcome{
+    color:var(--muted);
+    font-weight:700;
+}
+
+.card-box{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:22px;
+    box-shadow:0 18px 40px rgba(15,23,42,0.08);
+}
+
+.news-box,
+.video-box,
+.image-box,
+.publish-panel,
+.seo-box{
+    background:linear-gradient(180deg, #ffffff, #f8fafc);
+}
+
+.publish-panel{
+    position:sticky;
+    top:24px;
+    border-top:4px solid var(--accent);
+}
+
+.seo-box{
+    border-top:4px solid var(--blue);
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:22px;
+    color:#0f172a;
+}
+
+.section-title i{
+    width:34px;
+    height:34px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius:8px;
+    font-size:15px;
+}
+
+label{
+    color:#334155;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-control{
+    border-radius:8px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:#111827;
+}
+
+.form-control:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 4px rgba(37,99,235,0.12);
+}
+
+.publish-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg, var(--accent), #ef4444);
+    color:white;
+    font-size:16px;
+    font-weight:800;
+    transition:0.2s ease;
+    box-shadow:0 14px 28px rgba(185,28,28,0.25);
+}
+
+.publish-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 18px 34px rgba(185,28,28,0.32);
+}
+
+.preview-container{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.preview-container img{
+    width:132px;
+    height:96px;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid var(--line);
+    box-shadow:0 8px 20px rgba(15,23,42,0.12);
+}
+
+.toggle-box{
+    background:#f8fafc;
+    border:1px solid var(--line);
+    padding:13px 14px;
+    border-radius:8px;
+    margin-bottom:12px;
+}
+
+.toggle-box label{
+    margin:0;
+}
+
+.form-check-input{
+    width:46px;
+    height:24px;
+    cursor:pointer;
+}
+
+.form-check-input:checked{
+    background-color:var(--accent);
+    border-color:var(--accent);
+}
+
+.slug-preview{
+    background:#f8fafc;
+    border:1px dashed #cbd5e1;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-top:10px;
+    color:var(--blue);
+    font-weight:800;
+    word-break:break-word;
+}
+
+.cke{
+    border:1px solid var(--line) !important;
+    border-radius:8px !important;
+    overflow:hidden;
+    box-shadow:none !important;
+}
+
+.cke_notification_warning{
+    display:none !important;
+}
+
+@media (max-width:991px){
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main-content{
+        margin-left:0;
+        padding:18px;
+    }
+
+    .publish-panel{
+        position:static;
+    }
+}
+
+</style>
+
+<link rel="stylesheet" href="/static/css/admin-sidebar.css">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+{% include 'includes/sidebar.html' %}
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar d-flex justify-content-between align-items-center">
+
+        <h4>
+            📰 Add News
+        </h4>
+
+        <div>
+            Welcome Admin 🚀
+        </div>
+
+    </div>
+
+<form method="post"
+      action="/save-news"
+      enctype="multipart/form-data"
+      id="newsForm">
+
+<div class="row">
+
+    <!-- LEFT -->
+
+    <div class="col-md-8">
+
+        <!-- NEWS DETAILS -->
+
+        <div class="card-box news-box">
+
+            <div class="section-title">
+
+                📝 News Details
+
+            </div>
+
+            <!-- TITLE -->
+
+            <div class="mb-4">
+
+                <label>
+                    News Title
+                </label>
+
+                <input type="text"
+                       name="title"
+                       id="title"
+                       class="form-control form-control-lg"
+                       placeholder="Enter a clear headline"
+                       required
+                       onkeyup="generateSlug()">
+
+                <div class="slug-preview">
+
+                    URL:
+                    <span id="slugText">
+                        news-url-preview
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+
+            <div class="mb-3">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea name="description"
+                          id="description"
+                          rows="10"
+                          class="form-control"
+                          required></textarea>
+
+            </div>
+
+            <!-- SOURCE -->
+
+            <div class="mb-3">
+
+                <label>
+                    Source
+                </label>
+
+                <input type="text"
+                       name="source"
+                       class="form-control"
+                       placeholder="Source name or URL">
+
+            </div>
+
+        </div>
+
+        <!-- VIDEO -->
+
+        <div class="card-box video-box">
+
+            <div class="section-title">
+
+                🎥 Video Details
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-8">
+
+                    <label>
+                        Video Link
+                    </label>
+
+                    <input type="text"
+                           name="video_link"
+                           class="form-control"
+                           placeholder="YouTube or Facebook video link">
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label>
+                        Video Type
+                    </label>
+
+                    <select name="video_type"
+                            class="form-control">
+
+                        <option value="">
+                            Select
+                        </option>
+
+                        <option value="youtube">
+                            YouTube
+                        </option>
+
+                        <option value="facebook">
+                            Facebook
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- IMAGE -->
+
+        <div class="card-box image-box">
+
+            <div class="section-title">
+
+                🖼️ Upload Images
+
+            </div>
+
+            <input type="file"
+                   name="images"
+                   id="images"
+                   class="form-control"
+                   accept="image/*"
+                   multiple
+                   onchange="previewImages()">
+
+            <div class="preview-container mt-3"
+                 id="previewContainer">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="col-md-4">
+
+        <!-- PUBLISH -->
+
+        <div class="card-box publish-panel">
+
+            <div class="section-title">
+
+                🚀 Publish Settings
+
+            </div>
+
+            <!-- CATEGORY -->
+
+            <div class="mb-3">
+
+                <label>
+                    Category
+                </label>
+
+                <select name="category_id"
+                        class="form-control"
+                        required>
+
+                    {% for category in categories %}
+
+                    <option value="{{ category.id }}">
+
+                        {{ category.category_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- CHANNEL -->
+
+            <div class="mb-3">
+
+                <label>
+                    Channel
+                </label>
+
+                <select name="channel_id"
+                        class="form-control"
+                        required>
+
+                    <option value="1">
+                        Coimbatore LIVE
+                    </option>
+
+                    <option value="2">
+                        Tamil LIVE
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- BREAKING -->
+
+            <div class="toggle-box d-flex justify-content-between">
+
+                <label>
+                    🚨 Breaking News
+                </label>
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="is_breaking">
+
+            </div>
+
+            <!-- PUBLIC -->
+
+            <div class="toggle-box d-flex justify-content-between">
+
+                <label>
+                    🌍 Public News
+                </label>
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="is_public"
+                       checked>
+
+            </div>
+
+            <!-- NOTIFICATION -->
+
+            <div class="toggle-box d-flex justify-content-between">
+
+                <label>
+                    🔔 Send Notification
+                </label>
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="send_notification">
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button class="publish-btn">
+
+                Publish News
+
+            </button>
+
+        </div>
+
+        <!-- SEO -->
+
+        <div class="card-box seo-box">
+
+            <div class="section-title">
+
+                🔍 SEO Settings
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>
+                    Meta Title
+                </label>
+
+                <input type="text"
+                       name="meta_title"
+                       class="form-control"
+                       placeholder="Optional search title">
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>
+                    Meta Description
+                </label>
+
+                <textarea rows="4"
+                          name="meta_description"
+                          class="form-control"
+                          placeholder="Optional search description"></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</form>
+
+</div>
+
+<!-- CKEDITOR -->
+
+<script>
+
+const descriptionEditor = CKEDITOR.replace('description', {
+    height: 330,
+    removePlugins: 'elementspath',
+    resize_enabled: false
+});
+
+document.getElementById('newsForm').addEventListener('submit', function(e){
+    descriptionEditor.updateElement();
+
+    const title = document.getElementById('title').value.trim();
+    const description = descriptionEditor.getData().replace(/<[^>]*>/g, '').trim();
+
+    if(!title || !description){
+        e.preventDefault();
+        alert('Please enter both news title and description before publishing.');
+    }
+});
+
+</script>
+
+<!-- IMAGE PREVIEW -->
+
+<script>
+
+function previewImages(){
+
+    const preview = document.getElementById('previewContainer');
+
+    preview.innerHTML = "";
+
+    const files = document.getElementById('images').files;
+
+    for(let i=0;i<files.length;i++){
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            const img = document.createElement('img');
+
+            img.src = e.target.result;
+
+            preview.appendChild(img);
+
+        }
+
+        reader.readAsDataURL(files[i]);
+
+    }
+
+}
+
+</script>
+
+<!-- SLUG -->
+
+<script>
+
+function generateSlug(){
+
+    let title = document.getElementById('title').value;
+
+    let slug = title
+        .toLowerCase()
+        .replace(/ /g,'-')
+        .replace(/[^\w-]+/g,'');
+
+    document.getElementById('slugText').innerHTML = slug;
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ current_category.category_name }} | Noyyal Express</title>
+
+    <!-- Tailwind CSS -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+
+        body{
+
+            background:#f5f5f5;
+            font-family:Arial, Helvetica, sans-serif;
+
+        }
+
+        .news-card img{
+
+            transition:0.4s;
+
+        }
+
+        .news-card:hover img{
+
+            transform:scale(1.08);
+
+        }
+
+        .category-title{
+
+            border-left:5px solid red;
+            padding-left:10px;
+
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="/static/css/news-theme.css">
+
+</head>
+
+<body>
+
+<!-- ========================================= -->
+<!-- TOP HEADER -->
+<!-- ========================================= -->
+
+<div class="top-strip bg-black text-white py-2 px-4">
+
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <div class="flex items-center gap-3">
+
+            <span class="live-pill bg-red-600 px-3 py-1 rounded text-sm">
+
+                LIVE
+
+            </span>
+
+            <span id="date-time"></span>
+
+        </div>
+
+        <div class="flex gap-4 text-lg">
+
+            <i class="fab fa-facebook hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-youtube hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-instagram hover:text-red-500 cursor-pointer"></i>
+            <i class="fab fa-twitter hover:text-red-500 cursor-pointer"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- HEADER -->
+<!-- ========================================= -->
+
+<div class="site-header bg-white shadow">
+
+    <div class="max-w-7xl mx-auto px-4 py-4">
+
+        <div class="grid lg:grid-cols-3 items-center gap-5">
+
+            <!-- LOGO -->
+
+            <div class="flex items-center">
+
+                <a href="/">
+
+                    <img
+                        src="/static/logo/logo.png"
+                        alt="Noyyal Express"
+                        class="site-logo h-20 object-contain"
+                    >
+
+                </a>
+
+            </div>
+
+            <!-- AD SECTION -->
+
+            <div>
+
+                <div
+                    class="ad-panel bg-gradient-to-r from-red-700 to-black rounded-xl h-24 flex items-center justify-center text-white shadow-lg"
+                >
+
+                    <div class="text-center">
+
+                        <p class="text-sm uppercase tracking-widest">
+
+                            Sponsored Advertisement
+
+                        </p>
+
+                        <h2 class="text-2xl font-bold">
+
+                            Your Business Ad Here
+
+                        </h2>
+
+                        <p class="text-sm text-gray-200">
+
+                            Contact : +91 XXXXX XXXXX
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="site-search flex justify-end">
+
+                <form
+                    action="/"
+                    method="GET"
+                    class="relative w-full lg:w-72"
+                >
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search News..."
+                        class="border-2 border-red-600 px-4 py-3 rounded-xl w-full focus:outline-none"
+                    >
+
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-2 bg-red-600 text-white px-4 py-1 rounded-lg"
+                    >
+
+                        <i class="fa fa-search"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
+
+<div class="main-nav bg-red-700 text-white sticky top-0 z-50 shadow-lg">
+
+    <div class="max-w-7xl mx-auto">
+
+        <div class="nav-scroll relative flex items-center gap-3 px-4 py-4 font-semibold">
+
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                HOME
+
+            </a>
+
+            <!-- MENU CATEGORIES -->
+
+            {% for category in menu_categories %}
+
+            <a
+                href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                class="hover:text-yellow-300 whitespace-nowrap"
+            >
+
+                {{ category.category_name }}
+
+            </a>
+
+            {% endfor %}
+
+            <!-- MORE MENU -->
+
+            {% if more_categories %}
+
+            <div class="relative">
+
+                <button
+                    id="moreBtn"
+                    type="button"
+                    class="hover:text-yellow-300 whitespace-nowrap flex items-center gap-2"
+                >
+
+                    MORE
+
+                    <i class="fa fa-angle-down"></i>
+
+                </button>
+
+                <!-- DROPDOWN -->
+
+                <div
+                    id="moreMenu"
+                    class="hidden absolute left-0 top-10 bg-white text-black rounded-xl shadow-2xl w-64 overflow-hidden"
+                    style="z-index:9999;"
+                >
+
+                    {% for category in more_categories %}
+
+                    <a
+                        href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                        class="block px-5 py-3 hover:bg-red-600 hover:text-white border-b"
+                    >
+
+                        {{ category.category_name }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- CATEGORY BANNER -->
+<!-- ========================================= -->
+
+<div class="category-banner bg-gradient-to-r from-red-700 to-black text-white py-14">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <h1 class="text-5xl font-bold">
+
+            {{ current_category.category_name }}
+
+        </h1>
+
+        <p class="mt-4 text-gray-200 text-lg">
+
+            Latest updates, breaking stories and trending news.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================= -->
+
+<div class="max-w-7xl mx-auto px-4 mt-10">
+
+    <div class="grid lg:grid-cols-3 gap-8">
+
+        <!-- CATEGORY NEWS -->
+
+        <div class="lg:col-span-2">
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                {% for news in category_news %}
+
+                <a
+                    href="/news/{{ news.id }}/{{ news.slug or 'news-details' }}"
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden news-card block"
+                >
+
+                    <div class="overflow-hidden">
+
+                        <img
+                            src="{% if news.image_name %}/static/uploads/{{ news.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                            class="w-full h-56 object-cover"
+                        >
+
+                    </div>
+
+                    <div class="p-5">
+
+                        <span class="news-label text-red-600 font-bold text-sm">
+
+                            {{ current_category.category_name }}
+
+                        </span>
+
+                        <h2 class="text-2xl font-bold mt-3 line-clamp-2">
+
+                            {{ news.title }}
+
+                        </h2>
+
+                        <p class="text-gray-600 mt-3">
+
+                            {{ news.description[:120] }}...
+
+                        </p>
+
+                        <button
+                            class="read-more-btn mt-5 bg-red-600 hover:bg-black text-white px-4 py-2 rounded-lg"
+                        >
+
+                            Read More
+
+                        </button>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+
+        <div>
+
+            <!-- TRENDING NEWS -->
+
+            <div class="story-panel bg-white rounded-2xl shadow-xl p-5">
+
+                <h2 class="text-2xl font-bold text-red-600 mb-5">
+
+                    Trending News
+
+                </h2>
+
+                {% for item in trending_news %}
+
+                <a
+                    href="/news/{{ item.id }}/{{ item.slug or 'news-details' }}"
+                    class="side-story flex gap-4 mb-5 border-b pb-4"
+                >
+
+                    <img
+                        src="{% if item.image_name %}/static/uploads/{{ item.image_name }}{% else %}/static/no-image.jpg{% endif %}"
+                        class="w-28 h-24 object-cover rounded-lg"
+                    >
+
+                    <div>
+
+                        <h3 class="font-bold text-sm leading-6 hover:text-red-600">
+
+                            {{ item.title }}
+
+                        </h3>
+
+                        <p class="text-gray-500 text-xs mt-2">
+
+                            {{ item.description[:60] }}...
+
+                        </p>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- ADVERTISEMENT -->
+
+            <div
+                class="ad-panel bg-gradient-to-r from-black to-red-700 rounded-2xl p-8 text-white mt-8 shadow-xl"
+            >
+
+                <h2 class="text-3xl font-bold">
+
+                    Advertise Here
+
+                </h2>
+
+                <p class="mt-4 text-gray-200">
+
+                    Promote your business with Noyyal Express Digital Platform.
+
+                </p>
+
+                <button
+                    class="mt-6 bg-white text-black px-5 py-3 rounded-lg font-bold"
+                >
+
+                    Contact Us
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- FOOTER -->
+<!-- ========================================= -->
+
+<footer class="footer-pro bg-black text-white mt-16">
+
+    <div class="max-w-7xl mx-auto py-14 px-4 grid lg:grid-cols-4 gap-10">
+
+        <div>
+
+            <img
+                src="/static/logo/logo.png"
+                class="h-16"
+            >
+
+            <p class="mt-4 text-gray-400">
+
+                Premium Tamil Digital News Platform.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Categories
+
+            </h3>
+
+            <div class="space-y-2">
+
+                {% for category in menu_categories %}
+
+                <a
+                    href="/category/{{ category.id }}/{{ category.category_name|lower|replace(' ','-') }}"
+                    class="block hover:text-red-500"
+                >
+
+                    {{ category.category_name }}
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Quick Links
+
+            </h3>
+
+            <div class="space-y-2">
+
+                <p>Home</p>
+                <p>Breaking News</p>
+                <p>Politics</p>
+                <p>Technology</p>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3 class="text-xl font-bold mb-4">
+
+                Follow Us
+
+            </h3>
+
+            <div class="social-icons flex gap-4 text-2xl">
+
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="border-t border-gray-700 py-5 text-center text-gray-400">
+
+        &copy; 2026 Noyyal Express. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+<!-- ========================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================= -->
+
+<script>
+
+    // DATE TIME
+
+    function updateDateTime(){
+
+        const now = new Date();
+
+        document.getElementById("date-time").innerHTML =
+            now.toLocaleString();
+
+    }
+
+    setInterval(updateDateTime,1000);
+
+    updateDateTime();
+
+    // MORE MENU
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+        const moreBtn = document.getElementById("moreBtn");
+
+        const moreMenu = document.getElementById("moreMenu");
+
+        if(moreBtn){
+
+            moreBtn.addEventListener("click", function(e){
+
+                e.stopPropagation();
+
+                moreMenu.classList.toggle("hidden");
+
+            });
+
+        }
+
+        document.addEventListener("click", function(){
+
+            if(moreMenu){
+
+                moreMenu.classList.add("hidden");
+
+            }
+
+        });
+
+    });
+
+</script>
+
+</body>
+
+</html>

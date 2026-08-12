@@ -1,0 +1,66 @@
+<div class="sidebar">
+
+    <div class="logo-area">
+
+        <h3>
+            <i class="fa fa-newspaper"></i>
+            NOYYAL
+        </h3>
+
+        <small>
+            EXPRESS CMS
+        </small>
+
+    </div>
+
+    <a href="/dashboard" class="{% if request.url.path == '/dashboard' %}active{% endif %}">
+        <i class="fa fa-home"></i>
+        Dashboard
+    </a>
+
+    <a href="/add-news" class="{% if request.url.path == '/add-news' %}active{% endif %}">
+        <i class="fa fa-plus-circle"></i>
+        Add News
+    </a>
+
+    <a href="/news-list" class="{% if request.url.path == '/news-list' or request.url.path.startswith('/edit-news') %}active{% endif %}">
+        <i class="fa fa-list"></i>
+        News List
+    </a>
+
+    <a href="#">
+        <i class="fa fa-bolt"></i>
+        Breaking News
+    </a>
+
+    <a href="#">
+        <i class="fa fa-video"></i>
+        Videos
+    </a>
+
+    <a href="#">
+        <i class="fa fa-image"></i>
+        Gallery
+    </a>
+
+    <a href="/analytics" class="{% if request.url.path == '/analytics' %}active{% endif %}">
+        <i class="fa fa-chart-line"></i>
+        Analytics
+    </a>
+
+    <a href="#">
+        <i class="fa fa-users"></i>
+        Users
+    </a>
+
+    <a href="#">
+        <i class="fa fa-share-alt"></i>
+        Social Media
+    </a>
+
+    <a href="/settings" class="{% if request.url.path == '/settings' %}active{% endif %}">
+        <i class="fa fa-cog"></i>
+        Settings
+    </a>
+
+</div>

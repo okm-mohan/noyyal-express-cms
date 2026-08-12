@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pymysql
+python-slugify
+python-multipart
+jinja2
+sqlalchemy
+a2wsgi
