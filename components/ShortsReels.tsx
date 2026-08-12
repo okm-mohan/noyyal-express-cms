@@ -1,0 +1,1 @@
+import {shorts} from '@/data/shorts';import {ShortCard} from './ShortCard';export function ShortsReels(){return <section className="card shorts"><div className="section-title"><h2>SHORTS / REELS</h2><b>VIEW ALL　→</b></div><div className="short-grid">{shorts.map(x=><ShortCard key={x.title} item={x}/>)}</div></section>}

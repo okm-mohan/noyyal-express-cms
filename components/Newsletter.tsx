@@ -1,0 +1,1 @@
+export function Newsletter(){return <section className="card newsletter"><h2>NEWSLETTER</h2><p>Get the latest news updates in your inbox</p><div><input placeholder="Enter your email"/><button>SUBSCRIBE</button></div></section>}

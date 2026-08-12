@@ -1,0 +1,1 @@
+export function ShortCard({item}:{item:{image:string,title:string,views:string,duration:string}}){return <article className="short-card"><div><img src={`/images/${item.image}`} alt=""/><b>{item.duration}</b></div><h3>{item.title}</h3><small>{item.views}</small></article>}

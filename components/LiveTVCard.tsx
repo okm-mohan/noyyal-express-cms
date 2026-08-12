@@ -1,0 +1,2 @@
+import {Play, Radio} from 'lucide-react';
+export function LiveTVCard(){return <section className="card live-card"><h2>NOYYAL EXPRESS <em>LIVE</em><b>LIVE</b></h2><div className="live-screen"><div><strong>NOYYAL</strong><strong>EXPRESS</strong><small>24×7</small></div><button><Play/></button></div><p><i/> LIVE　|　<strong>Noyyal Express 24x7 News Channel</strong></p><small>Coimbatore's No.1 Digital News Channel</small><button className="red-button"><Radio/> WATCH LIVE NOW</button></section>}

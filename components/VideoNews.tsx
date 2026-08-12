@@ -1,0 +1,1 @@
+import {videos} from '@/data/videos';import {VideoCard} from './VideoCard';export function VideoNews(){return <section className="card videos"><div className="section-title"><h2>VIDEO NEWS</h2><b>VIEW ALL →</b></div><div className="video-grid">{videos.map(v=><VideoCard key={v.title} item={v}/>)}</div></section>}

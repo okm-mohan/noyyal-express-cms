@@ -1,0 +1,1 @@
+import {Play} from 'lucide-react'; export function VideoCard({item}:{item:{image:string,title:string,time:string,duration:string}}){return <article className="video-card"><div><img src={`/images/${item.image}`} alt=""/><i><Play/></i><b>{item.duration}</b></div><h3>{item.title}</h3><small>{item.time}</small></article>}

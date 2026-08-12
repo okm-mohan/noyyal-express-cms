@@ -1,0 +1,2 @@
+import {Bookmark} from 'lucide-react'; import {latestNews} from '@/data/news';
+export function LatestNews(){return <section className="card latest"><div className="section-title"><h2>LATEST NEWS</h2><div className="tabs"><b>ALL</b><span>COIMBATORE</span><span>TAMIL NADU</span><span>INDIA</span><span>WORLD</span></div></div>{latestNews.map(n=><article className="latest-item" key={n.title}><img src={`/images/${n.image}`} alt=""/><div><h3>{n.title}</h3><small><b>{n.tag}</b>　{n.time}　|　May 19, 2026</small></div><Bookmark/></article>)}<footer>VIEW MORE NEWS　→</footer></section>}

@@ -1,0 +1,1 @@
+import {Facebook, Instagram, Youtube} from 'lucide-react'; export function FollowUs(){return <section className="card follow"><h2>FOLLOW US</h2><div><i><Youtube/></i><i><Facebook/></i><i><Instagram/></i><i>𝕏</i><i>◉</i></div></section>}
