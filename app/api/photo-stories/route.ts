@@ -1,0 +1,7 @@
+import { NextResponse } from 'next/server';
+import { Pool } from 'pg';
+import { mkdir, writeFile } from 'fs/promises';
+import path from 'path';
+const pool=new Pool({connectionString:process.env.DATABASE_URL});
+async function saveImage(file:File,id:string,folderName:string){const name=`${id}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`,folder=path.join(process.cwd(),'public','uploads',folderName);await mkdir(folder,{recursive:true});await writeFile(path.join(folder,name),Buffer.from(await file.arrayBuffer()));return `/uploads/${folderName}/${name}`}
+export async function POST(request:Request){const data=await request.formData();const photo=data.get('photo'),lead=data.get('leadImage');if(!(photo instanceof File)||!photo.size||!photo.type.startsWith('image/'))return NextResponse.json({error:'A valid story image is required.'},{status:400});const id=crypto.randomUUID(),url=await saveImage(photo,id,'photo-stories');let thumbnailUrl:string|null=null;if(lead instanceof File&&lead.size){if(!lead.type.startsWith('image/'))return NextResponse.json({error:'Lead image must be valid.'},{status:400});thumbnailUrl=await saveImage(lead,`${id}-lead`,'photo-leads')}await pool.query('INSERT INTO "Media" (id,url,"altText","fileName","mimeType",size,"thumbnailUrl","contentType") VALUES ($1,$2,$3,$4,$5,$6,$7,$8)',[id,url,String(data.get('title')||photo.name),photo.name,photo.type,photo.size,thumbnailUrl,'PHOTO_STORY']);return NextResponse.redirect(new URL('/admin/photo-stories',request.url),303)}

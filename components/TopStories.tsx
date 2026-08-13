@@ -1,2 +1,2 @@
-import {topStories} from '@/data/topStories';
-export function TopStories(){return <section className="card top-stories"><h2>TOP STORIES</h2>{topStories.map((s,i)=><article className="top-item" key={s.title}><span>{i+1}</span><img src={`/images/${s.image}`} alt=""/><div><h3>{s.title}</h3><small>{s.time}</small></div></article>)}</section>}
+import type { Article } from '@/lib/news';
+export function TopStories({ articles }: { articles: Article[] }) { return <section className="card top-stories"><h2>TOP STORIES</h2>{articles.map((article, index) => <article className="top-item" key={article.id}><span>{index + 1}</span><img src={article.imageUrl || `/images/top-story-${(index % 4) + 1}.png`} alt="" /><div><h3>{article.title}</h3><small>{article.categoryName} · {article.views.toLocaleString()} views</small></div></article>)}</section>; }

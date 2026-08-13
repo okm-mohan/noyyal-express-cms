@@ -1,0 +1,6 @@
+'use client';
+import Link from 'next/link';
+import { Bell, Clock3, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+function nowLabel(){return new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date());}
+export function DashboardActions(){const [time,setTime]=useState('Loading time...');const [open,setOpen]=useState(false);useEffect(()=>{const timer=setInterval(()=>setTime(nowLabel()),1000);return()=>clearInterval(timer)},[]);return <div className="dashboard-actions"><div className="dashboard-clock"><Clock3/><span>{time}</span></div><div className="dashboard-notifications"><button className="notification" onClick={()=>setOpen(!open)} aria-label="Notifications"><Bell/><i/></button>{open&&<div className="notification-panel"><b>Notifications</b><p><span/>New articles and community reports will appear here.</p><small>You&apos;re all caught up.</small></div>}</div><Link className="admin-add" href="/admin/news/new"><Plus/> ADD NEWS</Link></div>}

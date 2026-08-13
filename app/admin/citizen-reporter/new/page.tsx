@@ -1,0 +1,8 @@
+import Link from 'next/link';
+import { ArrowLeft, MessageSquareHeart, Sparkles } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { Pool } from 'pg';
+import { ReportForm } from '@/components/ReportForm';
+const pool=new Pool({connectionString:process.env.DATABASE_URL});
+async function createReport(data:FormData){'use server';const headline=String(data.get('headline')||'').trim(),reporterName=String(data.get('reporterName')||'').trim();if(!headline||!reporterName)throw new Error('Headline and reporter name are required.');await pool.query('INSERT INTO "CitizenReport" (id,headline,description,reporter_name,location,status,updated_at) VALUES ($1,$2,$3,$4,$5,$6,NOW())',[crypto.randomUUID(),headline,String(data.get('description')||'')||null,reporterName,String(data.get('location')||'')||null,String(data.get('status')||'PENDING')]);redirect('/admin/citizen-reporter')}
+export default function NewReport(){return <section className="report-create"><header><Link href="/admin/citizen-reporter"><ArrowLeft/> CITIZEN REPORTER</Link><span><Sparkles/> COMMUNITY INBOX</span><h1>Add Citizen Report</h1><p>Record a community-submitted story for newsroom verification and review.</p></header><div className="report-create-card"><MessageSquareHeart/><div><h2>Report details</h2><p>Capture the essentials clearly so your newsroom can review it quickly.</p></div><ReportForm action={createReport}/></div></section>}

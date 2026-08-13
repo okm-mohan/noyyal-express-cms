@@ -1,0 +1,8 @@
+import Link from 'next/link';
+import { ArrowLeft, Pencil } from 'lucide-react';
+import { notFound, redirect } from 'next/navigation';
+import { Pool } from 'pg';
+import { ReportForm } from '@/components/ReportForm';
+const pool=new Pool({connectionString:process.env.DATABASE_URL});
+type Report={headline:string;description:string|null;reporter_name:string;location:string|null;status:string};
+export default async function EditReport({params}:{params:Promise<{id:string}>}){const {id}=await params;const {rows}=await pool.query<Report>('SELECT headline,description,reporter_name,location,status FROM "CitizenReport" WHERE id=$1',[id]);const report=rows[0];if(!report)notFound();async function updateReport(data:FormData){'use server';const headline=String(data.get('headline')||'').trim(),reporterName=String(data.get('reporterName')||'').trim();if(!headline||!reporterName)throw new Error('Headline and reporter name are required.');await pool.query('UPDATE "CitizenReport" SET headline=$1,description=$2,reporter_name=$3,location=$4,status=$5,updated_at=NOW() WHERE id=$6',[headline,String(data.get('description')||'')||null,reporterName,String(data.get('location')||'')||null,String(data.get('status')||'PENDING'),id]);redirect('/admin/citizen-reporter')};return <section className="report-create"><header><Link href="/admin/citizen-reporter"><ArrowLeft/> CITIZEN REPORTER</Link><span><Pencil/> REPORT REVIEW</span><h1>Review Citizen Report</h1><p>Verify the report, revise details where needed, and set the moderation status.</p></header><div className="report-create-card"><Pencil/><div><h2>Moderation workspace</h2><p>Use Approved only for reports cleared for newsroom use.</p></div><ReportForm action={updateReport} initial={report}/></div></section>}

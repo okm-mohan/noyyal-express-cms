@@ -1,0 +1,4 @@
+'use client';
+import { useState } from 'react';
+function currentLocalDateTime(){const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());return now.toISOString().slice(0,16);}
+export function ScheduleFields(){const [status,setStatus]=useState('DRAFT');const [dateTime]=useState(currentLocalDateTime);return <><label>Status<select name="status" value={status} onChange={(event)=>setStatus(event.target.value)}><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option><option value="SCHEDULED">Scheduled</option></select></label>{status==='SCHEDULED'&&<><label>Schedule date &amp; time<input name="scheduledAt" type="datetime-local" defaultValue={dateTime} required /></label><small className="schedule-note">Set the date and time this article should be published.</small></>}</>}
