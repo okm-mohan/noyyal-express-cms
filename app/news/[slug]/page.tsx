@@ -1,0 +1,10 @@
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { Clock, Eye, ChevronRight } from 'lucide-react';
+import { Header } from '@/components/Header';
+import { MainNavigation } from '@/components/MainNavigation';
+import { MegaFooter } from '@/components/LowerSections';
+import { ArticleEngagement } from '@/components/ArticleEngagement';
+import { getArticleDetail } from '@/lib/article-detail';
+
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) { const { slug } = await params; const data = await getArticleDetail(slug); if (!data) notFound(); const { article, comments, likes, related } = data; return <main><Header breakingHeadline={article.title}/><MainNavigation/><div className="article-page"><nav className="article-breadcrumb"><Link href="/">Home</Link><ChevronRight/><span>{article.categoryName}</span></nav><article className="article-detail"><p className="article-eyebrow">{article.isBreaking ? 'BREAKING NEWS' : article.categoryName}</p><h1>{article.title}</h1><p className="article-summary">{article.excerpt}</p><div className="article-meta"><span><Clock/> {article.publishedAt ? new Date(article.publishedAt).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' }) : ''}</span><span><Eye/> {article.views.toLocaleString()} views</span><span>By {article.authorName}</span></div><img className="article-lead-image" src={article.imageUrl || '/images/hero-rain.png'} alt=""/><div className="article-body">{(article.content || article.excerpt || '').split(/\n+/).filter(Boolean).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></article><ArticleEngagement articleId={article.id} initialLikes={likes} initialComments={comments}/><section className="related-news"><div className="section-title"><h2>SIMILAR NEWS</h2></div><div>{related.map((item, index) => <Link href={`/news/${item.slug}`} className="related-card" key={item.id}><img src={item.imageUrl || `/images/latest-${(index % 3) + 1}.png`} alt=""/><span>{item.categoryName}</span><h3>{item.title}</h3></Link>)}</div></section></div><MegaFooter/></main>; }

@@ -1,1 +1,3 @@
-import {shorts} from '@/data/shorts';import {ShortCard} from './ShortCard';export function ShortsReels(){return <section className="card shorts"><div className="section-title"><h2>SHORTS / REELS</h2><b>VIEW ALL　→</b></div><div className="short-grid">{shorts.map(x=><ShortCard key={x.title} item={x}/>)}</div></section>}
+import {Play} from 'lucide-react';
+import type {HomeMedia} from '@/lib/home';
+export function ShortsReels({shorts}:{shorts:HomeMedia[]}){return <section className="card shorts"><div className="section-title"><h2>SHORTS / REELS</h2><b>VIEW ALL →</b></div><div className="short-grid">{shorts.length?shorts.map((short,index)=><article className="database-short-card" key={short.id}><div><img src={short.thumbnailUrl||'/images/hero-rain.png'} alt=""/><i><Play/></i></div><h3>{short.title}</h3></article>):<p className="database-empty">No shorts have been published yet.</p>}</div></section>}

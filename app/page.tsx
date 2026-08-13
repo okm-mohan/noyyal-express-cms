@@ -9,11 +9,14 @@ import { ShortsReels } from '@/components/ShortsReels';
 import { FollowUs } from '@/components/FollowUs';
 import { Newsletter } from '@/components/Newsletter';
 import { ServiceBar } from '@/components/ServiceBar';
-import { AINewsCenter, AppPromotion, BusinessTechnology, CitizenReporter, CoimbatoreNews, CoimbatoreNow, DailyPoll, FeaturedVideo, JobsEducation, MegaFooter, PhotoStories, SportsEntertainment, TamilNaduNews, TempleEvents, TrendingNews } from '@/components/LowerSections';
-import { getArticles } from '@/lib/news';
+import { DatabaseNewsSections } from '@/components/DatabaseNewsSections';
+import { MegaFooter } from '@/components/LowerSections';
+import { getHomepageData } from '@/lib/home';
 
 export default async function Home() {
-  const articles = await getArticles();
-  const heroArticles = articles.filter((article) => article.isBreaking);
-  return <main><Header /><MainNavigation /><div className="page"><div className="hero-grid"><HeroStory articles={(heroArticles.length ? heroArticles : articles).slice(0, 3)} /><TopStories articles={(articles.filter((article) => article.isTrending).length ? articles.filter((article) => article.isTrending) : articles).slice(0, 4)} /><LiveTVCard /></div><div className="content-grid"><LatestNews articles={articles.slice(0, 6)} /><VideoNews /><aside><ShortsReels /><div className="small-cards"><FollowUs /><Newsletter /></div></aside></div><ServiceBar /><div className="lower-page"><TrendingNews /><CoimbatoreNews /><CoimbatoreNow /><FeaturedVideo /><TamilNaduNews /><SportsEntertainment /><BusinessTechnology /><PhotoStories /><TempleEvents /><JobsEducation /><AINewsCenter /><CitizenReporter /><DailyPoll /><AppPromotion /></div></div><MegaFooter /></main>;
+  const { articles, videos, shorts } = await getHomepageData();
+  const breaking = articles.filter((article) => article.isBreaking);
+  const trending = articles.filter((article) => article.isTrending);
+  const headline = (breaking[0] || articles[0])?.title;
+  return <main><Header breakingHeadline={headline}/><MainNavigation/><div className="page"><div className="hero-grid"><HeroStory articles={(breaking.length ? breaking : articles).slice(0, 3)}/><TopStories articles={(trending.length ? trending : articles).slice(0, 4)}/><LiveTVCard/></div><div className="content-grid"><LatestNews articles={articles.slice(0, 6)}/><VideoNews videos={videos}/><aside><ShortsReels shorts={shorts}/><div className="small-cards"><FollowUs/><Newsletter/></div></aside></div><ServiceBar/><DatabaseNewsSections articles={articles}/></div><MegaFooter/></main>;
 }
